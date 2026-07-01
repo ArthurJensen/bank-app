@@ -49,6 +49,35 @@ def login():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+@app.route('/api/signup', methods=['POST'])
+def signup():
+    data = request.json
+    first_name = data.get('first')
+    last_name = data.get('last')
+    email = data.get('email')
+    password = data.get('password') # In production, hash this!
+
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        
+        # Insert the fresh registration data directly into your Neon cloud database
+        cur.execute(
+            "INSERT INTO users (first_name, email, password_hash) VALUES (%s, %s, %s)",
+            (first_name, email, password)
+        )
+        conn.commit()
+        
+        cur.close()
+        conn.close()
+        return jsonify({"status": "success", "message": "Account created successfully!"}), 201
+        
+    except psycopg2.errors.UniqueViolation:
+        # Prevents duplicate registrations with the same email address
+        return jsonify({"status": "error", "message": "An account with this email already exists."}), 400
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)

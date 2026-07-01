@@ -174,11 +174,38 @@
     if(valid){
       submitBtn.textContent = 'Creating account…';
       submitBtn.disabled = true;
-      setTimeout(function(){
+
+      // Hit your live Render instance endpoint
+      fetch('https://bank-app-owi0.onrender.com/api/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          first: fields.first.value.trim(),
+          last: fields.last.value.trim(),
+          email: fields.email.value.trim(),
+          password: fields.password.value
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
         submitBtn.textContent = 'Create account';
         submitBtn.disabled = false;
-        alert('Demo only — no account system is connected yet.');
-      }, 900);
+        
+        if(data.status === 'success') {
+            alert(data.message); // Displays "Account created successfully!"
+            window.location.href = 'Login.html'; // Sends them right over to sign in
+        } else {
+            alert("Sign up failed: " + data.message);
+        }
+      })
+      .catch(error => {
+        submitBtn.textContent = 'Create account';
+        submitBtn.disabled = false;
+        alert("Error connecting to the registration server.");
+        console.error('Error:', error);
+      });
     }
   });
 </script>
