@@ -233,7 +233,7 @@
 
       // Send the data to your Python backend
       // Send the data to your LIVE Render backend
-fetch('https://my-fake-bank-backend.onrender.com/api/login', {
+fetch('https://bank-app-owi0.onrender.com', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ email: username.value.trim(), password: password.value })
