@@ -7,18 +7,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="css/global.css">
 <link rel="stylesheet" href="css/components.css">
-<link rel="stylesheet" href = "css/login.css">
+<link rel="stylesheet" href="css/login.css">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,450;0,9..144,600;1,9..144,450&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-
-
-
-</style>
 </head>
 <body>
 
 <header>
-  <a href="index.html" class="brand"></a>
+  <a href="index.html" class="brand">
     <svg class="brand-mark" viewBox="0 0 24 24" fill="none"><path d="M3 9L12 3L21 9V10H3V9Z" stroke="#C9A56E" stroke-width="1.4" stroke-linejoin="round"/><path d="M5 10V19M9.5 10V19M14.5 10V19M19 10V19" stroke="#C9A56E" stroke-width="1.4"/><path d="M3 20H21" stroke="#C9A56E" stroke-width="1.4"/></svg>
     Meridian Trust
   </a>
@@ -97,14 +92,12 @@
       submitBtn.textContent = 'Signing in…';
       submitBtn.disabled = true;
 
-      // Send the data to your Python backend
       // Send the data to your LIVE Render backend
-// Add /api/login to the end of your target address!
-fetch('https://bank-app-owi0.onrender.com/api/login', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ email: username.value.trim(), password: password.value })
-})
+      fetch('https://bank-app-owi0.onrender.com/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: username.value.trim(), password: password.value })
+      })
       .then(response => response.json())
       .then(data => {
         submitBtn.textContent = 'Log in';
@@ -112,8 +105,10 @@ fetch('https://bank-app-owi0.onrender.com/api/login', {
         
         // Check the response from Python
         if(data.status === 'success') {
-            alert(data.message); // Should say "Welcome back!"
-            // Later, we will make this jump to exampleaccount.html!
+            // Save the user ID to local storage so the dashboard knows who logged in
+            localStorage.setItem('bank_user_id', data.user_id);
+            // Redirect to the dashboard
+            window.location.href = 'Dashboard.html';
         } else {
             alert("Login failed: " + data.message);
         }
@@ -125,8 +120,7 @@ fetch('https://bank-app-owi0.onrender.com/api/login', {
         console.error('Error:', error);
       });
     }
-    }
-  );
+  });
 
   [username, password].forEach(function(input){
     input.addEventListener('input', function(){
