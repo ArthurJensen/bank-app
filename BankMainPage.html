@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meridian Trust — Banking, Plainly Kept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,450;0,9..144,600;1,9..144,450&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink: #1B2430;
+    --ink-deep: #131A23;
+    --parchment: #EDE6D6;
+    --parchment-dim: #E2DAC7;
+    --brass: #B08D57;
+    --brass-bright: #C9A56E;
+    --forest: #3F5E52;
+    --charcoal: #2A2520;
+    --paper-line: rgba(42,37,32,0.14);
+    --ink-line: rgba(237,230,214,0.14);
+    --radius: 2px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink);
+    color:var(--parchment);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+  }
+  .wrap{max-width:1120px; margin:0 auto; padding:0 32px;}
+  h1,h2,h3{font-family:'Fraunces', serif; font-weight:450; letter-spacing:-0.01em;}
+  .mono{font-family:'IBM Plex Mono', monospace;}
+  a{color:inherit; text-decoration:none;}
+  :focus-visible{outline:2px solid var(--brass-bright); outline-offset:3px;}
+
+  /* NAV */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(19,26,35,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--ink-line);
+  }
+  nav{display:flex; align-items:center; justify-content:space-between; padding:20px 32px;}
+  .brand{display:flex; align-items:center; gap:10px; font-family:'Fraunces', serif; font-size:20px; font-weight:600; letter-spacing:0.01em;}
+  .brand-mark{width:22px; height:22px; flex-shrink:0;}
+  nav ul{list-style:none; display:flex; gap:36px;}
+  nav ul a{font-size:14px; color:var(--parchment-dim); transition:color 0.2s;}
+  nav ul a:hover{color:var(--brass-bright);}
+  .nav-cta{
+    font-family:'IBM Plex Mono', monospace; font-size:13px;
+    border:1px solid var(--brass); color:var(--brass-bright);
+    padding:9px 18px; border-radius:var(--radius);
+    transition:background 0.2s, color 0.2s;
+  }
+  .nav-cta:hover{background:var(--brass); color:var(--ink-deep);}
+  .nav-actions{display:flex; align-items:center; gap:18px;}
+  .nav-login{
+    font-family:'IBM Plex Mono', monospace; font-size:13px;
+    color:var(--parchment-dim); padding:9px 4px;
+    transition:color 0.2s;
+  }
+  .nav-login:hover{color:var(--parchment);}
+  .nav-links, .nav-cta{ }
+  .menu-btn{display:none; background:none; border:none; color:var(--parchment); font-size:24px; cursor:pointer;}
+
+  /* HERO — the ledger tally */
+  .hero{padding:96px 0 72px; position:relative; overflow:hidden;}
+  .hero-eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--brass-bright); margin-bottom:22px; display:flex; align-items:center; gap:10px;
+  }
+  .hero-eyebrow::before{content:''; width:24px; height:1px; background:var(--brass);}
+  .hero h1{
+    font-size:clamp(38px, 5.4vw, 68px);
+    line-height:1.05;
+    max-width:14ch;
+    color:var(--parchment);
+  }
+  .hero h1 em{font-style:italic; color:var(--brass-bright); font-weight:450;}
+  .hero-sub{
+    max-width:46ch; margin-top:26px; font-size:17px; color:var(--parchment-dim); line-height:1.65;
+  }
+  .hero-actions{display:flex; gap:16px; margin-top:38px; flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--brass); color:var(--ink-deep); font-weight:500; font-size:15px;
+    padding:14px 28px; border-radius:var(--radius); transition:background 0.2s, transform 0.2s;
+    display:inline-block;
+  }
+  .btn-primary:hover{background:var(--brass-bright); transform:translateY(-1px);}
+  .btn-ghost{
+    border:1px solid var(--ink-line); color:var(--parchment); font-size:15px;
+    padding:14px 28px; border-radius:var(--radius); transition:border-color 0.2s;
+  }
+  .btn-ghost:hover{border-color:var(--brass);}
+
+  /* Ledger strip — the signature element */
+  .ledger{
+    margin-top:72px; border-top:1px solid var(--ink-line); border-bottom:1px solid var(--ink-line);
+    padding:22px 0;
+  }
+  .ledger-row{
+    display:grid; grid-template-columns:1fr auto auto; gap:24px; align-items:baseline;
+    padding:11px 0; border-bottom:1px dashed var(--ink-line); font-family:'IBM Plex Mono', monospace; font-size:13.5px;
+    opacity:0; transform:translateX(-8px);
+    animation:ledgerIn 0.6s ease forwards;
+  }
+  .ledger-row:last-child{border-bottom:none;}
+  .ledger-row .desc{color:var(--parchment-dim);}
+  .ledger-row .tag{color:var(--forest-bright, #6E9A87); font-size:11px; letter-spacing:0.06em;}
+  .ledger-row .amt{color:var(--brass-bright); text-align:right; min-width:110px;}
+  @keyframes ledgerIn{ to{opacity:1; transform:translateX(0);} }
+
+  /* TRUST STRIP */
+  .trust{padding:36px 0; border-bottom:1px solid var(--ink-line);}
+  .trust .wrap{display:flex; flex-wrap:wrap; justify-content:space-between; gap:22px; align-items:center;}
+  .trust-item{font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--parchment-dim); display:flex; align-items:center; gap:10px;}
+  .trust-item .num{color:var(--brass-bright); font-size:15px;}
+
+  /* PAPER SECTIONS */
+  .paper{background:var(--parchment); color:var(--charcoal);}
+  .section{padding:96px 0;}
+  .section-head{max-width:640px; margin-bottom:56px;}
+  .eyebrow-dark{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--forest); margin-bottom:16px; display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow-dark::before{content:''; width:24px; height:1px; background:var(--forest);}
+  .section-head h2{font-size:clamp(28px, 3.4vw, 40px); color:var(--charcoal); line-height:1.15;}
+  .section-head p{margin-top:16px; font-size:16px; color:rgba(42,37,32,0.72); max-width:52ch;}
+
+  /* Accounts — ledger-entry cards */
+  .accounts{display:grid; grid-template-columns:repeat(3, 1fr); border-top:1px solid var(--paper-line);}
+  .account-card{
+    padding:36px 30px; border-right:1px solid var(--paper-line); border-bottom:1px solid var(--paper-line);
+    position:relative; transition:background 0.25s;
+  }
+  .account-card:last-child{border-right:none;}
+  .account-card:hover{background:rgba(63,94,82,0.05);}
+  .account-tag{font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.08em; color:var(--forest); text-transform:uppercase;}
+  .account-card h3{font-size:22px; margin-top:14px; color:var(--charcoal);}
+  .account-card .rate{font-family:'IBM Plex Mono', monospace; font-size:28px; color:var(--forest); margin-top:16px;}
+  .account-card .rate span{font-size:13px; color:rgba(42,37,32,0.55); font-family:'IBM Plex Sans', sans-serif;}
+  .account-card p{margin-top:14px; font-size:14.5px; color:rgba(42,37,32,0.68); line-height:1.6;}
+  .account-card .go{
+    margin-top:20px; font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--charcoal);
+    display:inline-flex; align-items:center; gap:6px; border-bottom:1px solid var(--charcoal); padding-bottom:2px;
+  }
+
+  /* How it works — real sequence, numbered honestly */
+  .steps{display:grid; grid-template-columns:repeat(4, 1fr); gap:0; border-top:1px solid var(--paper-line);}
+  .step{padding:32px 26px 32px 0; border-right:1px solid var(--paper-line); position:relative;}
+  .step:last-child{border-right:none;}
+  .step-num{font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--brass); margin-bottom:14px;}
+  .step h4{font-size:17px; font-weight:600; font-family:'IBM Plex Sans', sans-serif; color:var(--charcoal);}
+  .step p{margin-top:10px; font-size:13.5px; color:rgba(42,37,32,0.65); line-height:1.55;}
+
+  /* Statement / trust proof section — dark again */
+  .statement{padding:100px 0;}
+  .statement-grid{display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center;}
+  .statement-panel{
+    background:var(--ink-deep); border:1px solid var(--ink-line); border-radius:4px; padding:36px;
+  }
+  .statement-panel-head{display:flex; justify-content:space-between; align-items:center; padding-bottom:18px; border-bottom:1px solid var(--ink-line); margin-bottom:18px;}
+  .statement-panel-head span{font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--parchment-dim);}
+  .statement-line{display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px dashed var(--ink-line); font-family:'IBM Plex Mono', monospace; font-size:13px;}
+  .statement-line .l{color:var(--parchment-dim);}
+  .statement-line .r{color:var(--brass-bright);}
+  .statement-total{display:flex; justify-content:space-between; padding-top:18px; margin-top:6px; font-family:'IBM Plex Mono', monospace; font-size:16px; color:var(--parchment);}
+  .statement-copy h2{color:var(--parchment); font-size:clamp(26px,3vw,36px); line-height:1.2;}
+  .statement-copy p{margin-top:18px; color:var(--parchment-dim); font-size:15.5px; line-height:1.7; max-width:44ch;}
+  .statement-copy ul{margin-top:24px; display:flex; flex-direction:column; gap:14px;}
+  .statement-copy li{display:flex; gap:12px; font-size:14.5px; color:var(--parchment-dim); align-items:flex-start;}
+  .statement-copy li::before{content:'—'; color:var(--brass); flex-shrink:0;}
+
+  /* Footer */
+  footer{background:var(--ink-deep); border-top:1px solid var(--ink-line); padding:64px 0 32px;}
+  .footer-top{display:flex; justify-content:space-between; gap:48px; flex-wrap:wrap; padding-bottom:48px; border-bottom:1px solid var(--ink-line);}
+  .footer-brand{max-width:320px;}
+  .footer-brand p{margin-top:14px; font-size:14px; color:var(--parchment-dim); line-height:1.6;}
+  .footer-cols{display:flex; gap:56px; flex-wrap:wrap;}
+  .footer-col h5{font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--brass-bright); margin-bottom:16px;}
+  .footer-col a{display:block; font-size:14px; color:var(--parchment-dim); margin-bottom:11px; transition:color 0.2s;}
+  .footer-col a:hover{color:var(--parchment);}
+  .footer-bottom{display:flex; justify-content:space-between; padding-top:28px; font-size:12.5px; color:rgba(237,230,214,0.45); flex-wrap:wrap; gap:12px; font-family:'IBM Plex Mono', monospace;}
+
+  @media (max-width: 860px){
+    nav ul{display:none;}
+    .menu-btn{display:block;}
+    .accounts{grid-template-columns:1fr;}
+    .account-card{border-right:none;}
+    .steps{grid-template-columns:1fr 1fr;}
+    .step{border-right:none; border-bottom:1px solid var(--paper-line); padding:24px 0;}
+    .statement-grid{grid-template-columns:1fr;}
+    .ledger-row{grid-template-columns:1fr auto; font-size:12px;}
+    .ledger-row .tag{display:none;}
+    .nav-cta{display:none;}
+    .nav-login{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="wrap">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 24 24" fill="none"><path d="M3 9L12 3L21 9V10H3V9Z" stroke="#C9A56E" stroke-width="1.4" stroke-linejoin="round"/><path d="M5 10V19M9.5 10V19M14.5 10V19M19 10V19" stroke="#C9A56E" stroke-width="1.4"/><path d="M3 20H21" stroke="#C9A56E" stroke-width="1.4"/></svg>
+      Meridian Trust
+    </div>
+    <ul>
+      <li><a href="#accounts">Accounts</a></li>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#statement">Why Meridian</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="Login.html" class="nav-login">Log in</a>
+      <a href="#accounts" class="nav-cta">Open an account</a>
+    </div>
+    <button class="menu-btn" aria-label="Menu">☰</button>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="hero-eyebrow">Chartered · FDIC-insured · Est. 2011</p>
+    <h1>Banking kept as <em>plainly</em> as a ledger.</h1>
+    <p class="hero-sub">No hidden fees dressed up as "convenience charges." No fine print built to be missed. Meridian Trust shows you exactly where every cent sits — and exactly what it's doing for you.</p>
+    <div class="hero-actions">
+      <a href="#accounts" class="btn-primary">Open an account — takes 4 minutes</a>
+      <a href="#how" class="btn-ghost">See how it works</a>
+    </div>
+
+    <div class="ledger" aria-hidden="false">
+      <div class="ledger-row" style="animation-delay:0.05s">
+        <span class="desc">Monthly maintenance fee</span>
+        <span class="tag">WAIVED</span>
+        <span class="amt">$0.00</span>
+      </div>
+      <div class="ledger-row" style="animation-delay:0.15s">
+        <span class="desc">Interest, High-Yield Savings</span>
+        <span class="tag">APY</span>
+        <span class="amt">4.35%</span>
+      </div>
+      <div class="ledger-row" style="animation-delay:0.25s">
+        <span class="desc">Out-of-network ATM reimbursement</span>
+        <span class="tag">UNLIMITED</span>
+        <span class="amt">$0.00</span>
+      </div>
+      <div class="ledger-row" style="animation-delay:0.35s">
+        <span class="desc">Time to reach a human</span>
+        <span class="tag">AVG</span>
+        <span class="amt">0:41</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="trust">
+  <div class="wrap">
+    <div class="trust-item"><span class="num">$2.1B</span> in deposits held</div>
+    <div class="trust-item"><span class="num">140,000+</span> members</div>
+    <div class="trust-item"><span class="num">4.8/5</span> member rating</div>
+    <div class="trust-item"><span class="num">FDIC</span> insured to $250,000</div>
+  </div>
+</div>
+
+<section class="paper" id="accounts">
+  <div class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow-dark">Accounts</p>
+        <h2>Three accounts. No decoy options.</h2>
+        <p>Most banks give you eleven near-identical accounts so comparison feels exhausting. We give you three, each built for a different job your money does.</p>
+      </div>
+
+      <div class="accounts">
+        <div class="account-card">
+          <span class="account-tag">Everyday</span>
+          <h3>Checking</h3>
+          <div class="rate">$0<span> / month, always</span></div>
+          <p>No minimum balance, no direct-deposit requirement to waive fees — because there was never a fee to begin with.</p>
+          <a href="#" class="go">Open checking →</a>
+        </div>
+        <div class="account-card">
+          <span class="account-tag">Growing</span>
+          <h3>High-Yield Savings</h3>
+          <div class="rate">4.35<span>% APY</span></div>
+          <p>Rate applies from dollar one — no tiered balances, no promotional rate that quietly drops after 90 days.</p>
+          <a href="#" class="go">Open savings →</a>
+        </div>
+        <div class="account-card">
+          <span class="account-tag">Building</span>
+          <h3>12-Month CD</h3>
+          <div class="rate">4.80<span>% APY</span></div>
+          <p>Locked rate, fixed term, and one early-withdrawal rule stated in plain language — not buried in a rate sheet PDF.</p>
+          <a href="#" class="go">Open a CD →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" style="padding-top:0;" id="how">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow-dark">Process</p>
+        <h2>Opening an account, in the actual order it happens.</h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <h4>Verify identity</h4>
+          <p>Government ID and a selfie check — same standard every federally insured bank requires.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <h4>Choose your account</h4>
+          <p>Checking, savings, or CD. You can add the others later without a new application.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <h4>Fund it</h4>
+          <p>Link an external account, or deposit a check by photo. Funds post within one business day.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <h4>You're in</h4>
+          <p>Card ships in 3–5 days. Digital card and full account access are available immediately.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="statement" id="statement">
+  <div class="wrap statement-grid">
+    <div class="statement-copy">
+      <p class="hero-eyebrow" style="margin-bottom:14px;">Why Meridian</p>
+      <h2>We publish our own statement, too.</h2>
+      <p>Most banks ask you to trust a brand. We'd rather show you the numbers a member actually sees in a typical month — the ones usually left out of the marketing page.</p>
+      <ul>
+        <li>Zero overdraft fees, replaced by a $0-interest 2-day grace transfer.</li>
+        <li>No fee for paper statements, wire transfers under $10,000, or account closure.</li>
+        <li>Support wait times published live, updated every hour, not quoted from a best-case average.</li>
+      </ul>
+    </div>
+    <div class="statement-panel">
+      <div class="statement-panel-head">
+        <strong style="font-family:'Fraunces',serif; font-size:16px;">Member Statement</strong>
+        <span>SAMPLE · JUNE</span>
+      </div>
+      <div class="statement-line"><span class="l">Monthly fees charged</span><span class="r">$0.00</span></div>
+      <div class="statement-line"><span class="l">Overdraft fees charged</span><span class="r">$0.00</span></div>
+      <div class="statement-line"><span class="l">ATM fees reimbursed</span><span class="r">$14.50</span></div>
+      <div class="statement-line"><span class="l">Interest earned, savings</span><span class="r">$38.92</span></div>
+      <div class="statement-line"><span class="l">Interest earned, CD</span><span class="r">$61.10</span></div>
+      <div class="statement-total"><span>Net cost of banking with us</span><span>–$114.52</span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="brand">
+          <svg class="brand-mark" viewBox="0 0 24 24" fill="none"><path d="M3 9L12 3L21 9V10H3V9Z" stroke="#C9A56E" stroke-width="1.4" stroke-linejoin="round"/><path d="M5 10V19M9.5 10V19M14.5 10V19M19 10V19" stroke="#C9A56E" stroke-width="1.4"/><path d="M3 20H21" stroke="#C9A56E" stroke-width="1.4"/></svg>
+          Meridian Trust
+        </div>
+        <p>Meridian Trust is a member-owned bank chartered in 2011. Deposits insured by the FDIC up to $250,000 per depositor.</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h5>Accounts</h5>
+          <a href="#accounts">Checking</a>
+          <a href="#accounts">Savings</a>
+          <a href="#accounts">CDs</a>
+        </div>
+        <div class="footer-col">
+          <h5>Company</h5>
+          <a href="#">About</a>
+          <a href="#">Rates</a>
+          <a href="#">Careers</a>
+        </div>
+        <div class="footer-col">
+          <h5>Support</h5>
+          <a href="#">Contact</a>
+          <a href="#">Security</a>
+          <a href="#">Help center</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Meridian Trust. All rights reserved.</span>
+      <span>Routing 071925511 · Member FDIC</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
