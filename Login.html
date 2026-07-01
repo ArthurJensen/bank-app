@@ -230,13 +230,41 @@
     if(valid){
       submitBtn.textContent = 'Signing in…';
       submitBtn.disabled = true;
-      setTimeout(function(){
+
+      // Send the data to your Python backend
+      fetch('http://127.0.0.1:5000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        // We use username.value here because your HTML input id is 'username'
+        body: JSON.stringify({
+          email: username.value.trim(), 
+          password: password.value
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
         submitBtn.textContent = 'Log in';
         submitBtn.disabled = false;
-        alert('Demo only — no account system is connected yet.');
-      }, 900);
+        
+        // Check the response from Python
+        if(data.status === 'success') {
+            alert(data.message); // Should say "Welcome back!"
+            // Later, we will make this jump to exampleaccount.html!
+        } else {
+            alert("Login failed: " + data.message);
+        }
+      })
+      .catch(error => {
+        submitBtn.textContent = 'Log in';
+        submitBtn.disabled = false;
+        alert("Error connecting to the server. Is app.py running?");
+        console.error('Error:', error);
+      });
     }
-  });
+    }
+  );
 
   [username, password].forEach(function(input){
     input.addEventListener('input', function(){
