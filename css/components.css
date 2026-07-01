@@ -1,0 +1,15 @@
+.btn-primary{
+    background:var(--brass); color:var(--ink-deep); font-weight:500; font-size:15px;
+    padding:14px 28px; border-radius:var(--radius); transition:background 0.2s, transform 0.2s;
+    display:inline-block;
+  }
+  .btn-primary:hover{background:var(--brass-bright); transform:translateY(-1px);}
+  .btn-ghost{
+    border:1px solid var(--ink-line); color:var(--parchment); font-size:15px;
+    padding:14px 28px; border-radius:var(--radius); transition:border-color 0.2s;
+  }
+  .btn-ghost:hover{border-color:var(--brass);}
+  
+  header{padding:24px 32px; border-bottom:1px solid var(--ink-line);}
+  .brand{display:flex; align-items:center; gap:10px; font-family:'Fraunces', serif; font-size:19px; font-weight:600; width:fit-content;}
+  .brand-mark{width:20px; height:20px; flex-shrink:0;}

@@ -5,148 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Open an account — Meridian Trust</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href = "css/CheckingCreation.css">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,450;0,9..144,600;1,9..144,450&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --ink: #1B2430;
-    --ink-deep: #131A23;
-    --parchment: #EDE6D6;
-    --parchment-dim: #E2DAC7;
-    --brass: #B08D57;
-    --brass-bright: #C9A56E;
-    --forest: #3F5E52;
-    --forest-bright: #6E9A87;
-    --charcoal: #2A2520;
-    --ink-line: rgba(237,230,214,0.14);
-    --danger: #C4694B;
-    --radius: 2px;
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  body{
-    background:var(--ink);
-    color:var(--parchment);
-    font-family:'IBM Plex Sans', sans-serif;
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-  }
-  h1,h2{font-family:'Fraunces', serif; font-weight:450; letter-spacing:-0.01em;}
-  a{color:inherit; text-decoration:none;}
-  :focus-visible{outline:2px solid var(--brass-bright); outline-offset:3px;}
+
   @media (prefers-reduced-motion: reduce){
     *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
   }
 
-  header{padding:24px 32px; border-bottom:1px solid var(--ink-line);}
+  /* header{padding:24px 32px; border-bottom:1px solid var(--ink-line);}
   .brand{display:flex; align-items:center; gap:10px; font-family:'Fraunces', serif; font-size:19px; font-weight:600; width:fit-content;}
-  .brand-mark{width:20px; height:20px; flex-shrink:0;}
+  .brand-mark{width:20px; height:20px; flex-shrink:0;} */
 
-  main{
-    flex:1; display:flex; align-items:center; justify-content:center;
-    padding:56px 24px; position:relative;
-  }
-  main::before{
-    content:'';
-    position:absolute; inset:0;
-    background-image:repeating-linear-gradient(
-      to bottom, transparent 0, transparent 47px, var(--ink-line) 47px, var(--ink-line) 48px
-    );
-    -webkit-mask-image:radial-gradient(ellipse 60% 50% at 50% 30%, black, transparent 75%);
-    mask-image:radial-gradient(ellipse 60% 50% at 50% 30%, black, transparent 75%);
-    pointer-events:none;
-  }
-
-  .layout{
-    width:100%; max-width:920px; display:grid; grid-template-columns:1fr 1.15fr; gap:0;
-    position:relative; z-index:1;
-    background:var(--ink-deep); border:1px solid var(--ink-line); border-radius:4px; overflow:hidden;
-    animation:cardIn 0.5s ease;
-  }
-  @keyframes cardIn{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
-
-  /* Left: progress / what you get */
-  .side{
-    background:var(--ink); padding:44px 36px; border-right:1px solid var(--ink-line);
-  }
-  .card-eyebrow{
-    font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase;
-    color:var(--brass-bright); margin-bottom:14px; display:flex; align-items:center; gap:10px;
-  }
-  .card-eyebrow::before{content:''; width:20px; height:1px; background:var(--brass);}
-  .side h1{font-size:25px; color:var(--parchment); line-height:1.2;}
-  .side-sub{margin-top:10px; font-size:13.5px; color:var(--parchment-dim); line-height:1.6;}
-
-  .progress{margin-top:34px; display:flex; flex-direction:column; gap:0;}
-  .progress-step{display:flex; gap:14px; padding-bottom:24px; position:relative;}
-  .progress-step:not(:last-child)::before{
-    content:''; position:absolute; left:11px; top:26px; bottom:0; width:1px; background:var(--ink-line);
-  }
-  .progress-dot{
-    width:23px; height:23px; border-radius:50%; border:1px solid var(--ink-line);
-    display:flex; align-items:center; justify-content:center; flex-shrink:0;
-    font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--parchment-dim);
-    background:var(--ink-deep); z-index:1;
-  }
-  .progress-step.active .progress-dot{border-color:var(--brass); color:var(--brass-bright);}
-  .progress-step h4{font-size:14px; font-weight:500; color:var(--parchment);}
-  .progress-step p{font-size:12.5px; color:var(--parchment-dim); margin-top:3px; line-height:1.5;}
-
-  .side-note{
-    margin-top:8px; padding-top:22px; border-top:1px solid var(--ink-line);
-    font-size:12px; color:rgba(237,230,214,0.5); line-height:1.6;
-  }
-
-  /* Right: form */
-  .formside{padding:44px 40px;}
-  form{margin-top:0;}
-  .row2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
-  .field{margin-bottom:18px;}
-  .field label{
-    display:block; font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:0.05em;
-    text-transform:uppercase; color:var(--parchment-dim); margin-bottom:9px;
-  }
-  .field input, .field select{
-    width:100%; background:var(--ink); border:1px solid var(--ink-line); border-radius:var(--radius);
-    padding:13px 14px; font-family:'IBM Plex Mono', monospace; font-size:14px; color:var(--parchment);
-    transition:border-color 0.2s;
-  }
-  .field input::placeholder{color:rgba(237,230,214,0.32);}
-  .field input:focus, .field select:focus{border-color:var(--brass); outline:none;}
-  .field-error input{border-color:var(--danger);}
-  .error-msg{margin-top:7px; font-size:12px; color:var(--danger); font-family:'IBM Plex Mono', monospace; display:none;}
-  .field-error .error-msg{display:block;}
-  .hint{margin-top:7px; font-size:11.5px; color:rgba(237,230,214,0.4);}
-
-  .strength{display:flex; gap:4px; margin-top:9px;}
-  .strength span{height:3px; flex:1; background:var(--ink-line); border-radius:2px; transition:background 0.25s;}
-
-  .terms{display:flex; align-items:flex-start; gap:10px; margin:22px 0 24px;}
-  .terms input[type="checkbox"]{width:16px; height:16px; margin-top:2px; accent-color:var(--brass); cursor:pointer; flex-shrink:0;}
-  .terms label{font-size:12.5px; color:var(--parchment-dim); line-height:1.55; cursor:pointer;}
-  .terms a{color:var(--brass-bright);}
-  .terms a:hover{color:var(--parchment);}
-
-  .btn-primary{
-    width:100%; background:var(--brass); color:var(--ink-deep); font-weight:500; font-size:15px;
-    padding:14px; border:none; border-radius:var(--radius); cursor:pointer;
-    transition:background 0.2s; font-family:'IBM Plex Sans', sans-serif;
-  }
-  .btn-primary:hover{background:var(--brass-bright);}
-  .btn-primary:disabled{opacity:0.6; cursor:not-allowed;}
-
-  .login-line{text-align:center; font-size:13.5px; color:var(--parchment-dim); margin-top:20px;}
-  .login-line a{color:var(--brass-bright); font-weight:500;}
-  .login-line a:hover{color:var(--parchment);}
-
-  footer{padding:22px 32px; text-align:center; font-family:'IBM Plex Mono', monospace; font-size:12px; color:rgba(237,230,214,0.4); border-top:1px solid var(--ink-line);}
-
-  @media (max-width:760px){
-    .layout{grid-template-columns:1fr; max-width:460px;}
-    .side{border-right:none; border-bottom:1px solid var(--ink-line);}
-    .progress{display:none;}
-    .formside{padding:36px 26px;}
-    .row2{grid-template-columns:1fr;}
-  }
 </style>
 </head>
 <body>
