@@ -78,6 +78,31 @@ def signup():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+@app.route('/api/user/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        
+        # Fetch the name and balance for this specific user ID
+        cur.execute("SELECT first_name, balance FROM users WHERE id = %s", (user_id,))
+        user = cur.fetchone()
+        
+        cur.close()
+        conn.close()
+
+        if user:
+            return jsonify({
+                "status": "success", 
+                "first_name": user[0], 
+                "balance": str(user[1]) # Convert numeric to string for JSON safely
+            }), 200
+        else:
+            return jsonify({"status": "error", "message": "User not found"}), 404
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
