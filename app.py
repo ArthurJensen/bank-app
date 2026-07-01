@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app) # Allows your HTML files to talk to this backend[cite: 1]
+CORS(app) # Allows your HTML files to talk to this backend
 
 def get_db_connection():
     # Fetch the unified connection string from your Neon Dashboard
@@ -19,35 +19,36 @@ def get_db_connection():
 
 @app.route('/api/login', methods=['POST'])
 def login():
-    data = request.json[cite: 1]
-    email = data.get('email')[cite: 1]
-    password = data.get('password') # In production, hash this![cite: 1]
+    data = request.json
+    email = data.get('email')
+    password = data.get('password') # In production, hash this!
 
     try:
         conn = get_db_connection()
-        cur = conn.cursor()[cite: 1]
+        cur = conn.cursor()
         
         # Check if user exists with this email and password
         cur.execute(
             "SELECT id, first_name FROM users WHERE email = %s AND password_hash = %s",
-            (email, password)[cite: 1]
+            (email, password)
         )
-        user = cur.fetchone()[cite: 1]
+        user = cur.fetchone()
         
-        cur.close()[cite: 1]
-        conn.close()[cite: 1]
+        cur.close()
+        conn.close()
 
         if user:
             return jsonify({
                 "status": "success", 
                 "message": f"Welcome back, {user[1]}!",
                 "user_id": user[0]
-            }), 200[cite: 1]
+            }), 200
         else:
-            return jsonify({"status": "error", "message": "Invalid email or password"}), 401[cite: 1]
+            return jsonify({"status": "error", "message": "Invalid email or password"}), 401
 
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500[cite: 1]
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)[cite: 1]
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
