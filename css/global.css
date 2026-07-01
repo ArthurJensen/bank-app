@@ -1,0 +1,86 @@
+:root {
+  --ink: #1B2430;
+  /* Main dark background color */
+  --ink-deep: #131A23;
+  /* Even darker color for header/footer */
+  --parchment: #EDE6D6;
+  /* Main light text color */
+  --parchment-dim: #E2DAC7;
+  /* Slightly dimmer light text */
+  --brass: #B08D57;
+  /* Main gold accent color */
+  --brass-bright: #C9A56E;
+  /* Brighter gold for hover/highlights */
+  --forest: #3F5E52;
+  /* Green accent color */
+  --charcoal: #2A2520;
+  /* Dark text color for light sections */
+  --paper-line: rgba(42, 37, 32, 0.14);
+  /* Light-section border color */
+  --ink-line: rgba(237, 230, 214, 0.14);
+  /* Dark-section border color */
+  --radius: 2px;
+  /* Small border radius used on buttons/cards */
+}
+
+* {
+  box-sizing: border-box;
+  /* Makes width/height easier to control */
+  margin: 0;
+  /* Removes default browser margin */
+  padding: 0;
+  /* Removes default browser padding */
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Makes anchor links scroll smoothly */
+}
+
+body {
+  background: var(--ink);
+  /* Sets main page background */
+  color: var(--parchment);
+  /* Sets default text color */
+  font-family: 'IBM Plex Sans', sans-serif;
+  /* Main font */
+  line-height: 1.5;
+  /* Makes text easier to read */
+}
+
+.wrap {
+  max-width: 1120px;
+  /* Stops content from getting too wide */
+  margin: 0 auto;
+  /* Centers content horizontally */
+  padding: 0 32px;
+  /* Adds left/right spacing */
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Fraunces', serif;
+  /* Fancy heading font */
+  font-weight: 450;
+  /* Heading thickness */
+}
+
+a {
+  color: inherit;
+  /* Links use parent text color */
+  text-decoration: none;
+  /* Removes underline from links */
+}
+
+.mono {
+  font-family: 'IBM Plex Mono', monospace;
+  /* Class for typewriter-style text */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
