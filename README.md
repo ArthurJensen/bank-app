@@ -5,7 +5,7 @@ A full-stack, realistic banking web application built to practice modern web dev
 This project simulates a functional online banking portal where users can register for an account, log securely into their profiles, and view a dynamic dashboard populated with their unique database records.
 
 ## 🚀 Live Demo
-* **Frontend:** [Insert your GitHub Pages URL here]
+* **Frontend:** https://arthurjensen.github.io/bank-app/
 * **Backend API:** Hosted on Render (Spins down after 15 minutes of inactivity)
 
 ---
@@ -51,3 +51,11 @@ This project simulates a functional online banking portal where users can regist
 ├── app.py                   # Main Flask backend application and API routes
 ├── requirements.txt         # Python dependencies for Render deployment
 └── .env                     # Local environment variables (ignored in Git)
+```
+
+## 📈 Future Improvements (Roadmap)
+* **Implement password hashing** - (e.g., bcrypt) for production-grade security.
+
+* **Add JWT (JSON Web Tokens) or secure session cookies instead of using localStorage for authentication.**
+
+* **Build endpoints to simulate real-time money transfers between accounts.**
