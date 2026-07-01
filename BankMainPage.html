@@ -7,35 +7,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,450;0,9..144,600;1,9..144,450&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --ink: #1B2430;
-    --ink-deep: #131A23;
-    --parchment: #EDE6D6;
-    --parchment-dim: #E2DAC7;
-    --brass: #B08D57;
-    --brass-bright: #C9A56E;
-    --forest: #3F5E52;
-    --charcoal: #2A2520;
-    --paper-line: rgba(42,37,32,0.14);
-    --ink-line: rgba(237,230,214,0.14);
-    --radius: 2px;
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  html{scroll-behavior:smooth;}
-  body{
-    background:var(--ink);
-    color:var(--parchment);
-    font-family:'IBM Plex Sans', sans-serif;
-    line-height:1.5;
-    -webkit-font-smoothing:antialiased;
-  }
+  
+  
   @media (prefers-reduced-motion: reduce){
     *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
   }
-  .wrap{max-width:1120px; margin:0 auto; padding:0 32px;}
-  h1,h2,h3{font-family:'Fraunces', serif; font-weight:450; letter-spacing:-0.01em;}
-  .mono{font-family:'IBM Plex Mono', monospace;}
-  a{color:inherit; text-decoration:none;}
+  
+  
   :focus-visible{outline:2px solid var(--brass-bright); outline-offset:3px;}
 
   /* NAV */
@@ -86,17 +64,7 @@
     max-width:46ch; margin-top:26px; font-size:17px; color:var(--parchment-dim); line-height:1.65;
   }
   .hero-actions{display:flex; gap:16px; margin-top:38px; flex-wrap:wrap;}
-  .btn-primary{
-    background:var(--brass); color:var(--ink-deep); font-weight:500; font-size:15px;
-    padding:14px 28px; border-radius:var(--radius); transition:background 0.2s, transform 0.2s;
-    display:inline-block;
-  }
-  .btn-primary:hover{background:var(--brass-bright); transform:translateY(-1px);}
-  .btn-ghost{
-    border:1px solid var(--ink-line); color:var(--parchment); font-size:15px;
-    padding:14px 28px; border-radius:var(--radius); transition:border-color 0.2s;
-  }
-  .btn-ghost:hover{border-color:var(--brass);}
+
 
   /* Ledger strip — the signature element */
   .ledger{
