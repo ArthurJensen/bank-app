@@ -10,9 +10,7 @@ load_dotenv()
 app = Flask(__name__)
 
 CORS(app) # Allows your HTML files to talk to this backend
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+
 
 def get_db_connection():
     # Fetch the unified connection string from your Neon Dashboard
@@ -146,6 +144,10 @@ def send_money():
             "status": "error",
             "message": str(e)
         }), 500
+@app.route('/')
+def home():
+    return "Bank backend is running"
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
