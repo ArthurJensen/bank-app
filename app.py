@@ -145,6 +145,10 @@ def send_money():
             "status": "error",
             "message": str(e)
         }), 500
+    
+@app.route('/api/test-send-money', methods=['GET'])
+def test_send_money():
+    return jsonify({"message": "send money route area exists"})
 @app.route('/')
 def home():
     return "Bank backend is running"
