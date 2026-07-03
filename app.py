@@ -9,7 +9,8 @@ load_dotenv()
 
 app = Flask(__name__)
 
-CORS(app) # Allows your HTML files to talk to this backend
+CORS(app, resources={r"/*": {"origins": "*"}}) 
+
 
 
 def get_db_connection():
