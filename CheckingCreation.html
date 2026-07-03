@@ -10,21 +10,20 @@
 <link rel="stylesheet" href = "css/CheckingCreation.css">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,450;0,9..144,600;1,9..144,450&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-
   @media (prefers-reduced-motion: reduce){
     *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
   }
 
-  /* header{padding:24px 32px; border-bottom:1px solid var(--ink-line);}
+  header{padding:24px 32px; border-bottom:1px solid var(--ink-line);}
   .brand{display:flex; align-items:center; gap:10px; font-family:'Fraunces', serif; font-size:19px; font-weight:600; width:fit-content;}
-  .brand-mark{width:20px; height:20px; flex-shrink:0;} */
+  .brand-mark{width:20px; height:20px; flex-shrink:0;}
 
 </style>
 </head>
 <body>
 
 <header>
-  <a href="index.html" class="brand">
+  <a href="BankMainPage.html" class="brand">
     <svg class="brand-mark" viewBox="0 0 24 24" fill="none"><path d="M3 9L12 3L21 9V10H3V9Z" stroke="#C9A56E" stroke-width="1.4" stroke-linejoin="round"/><path d="M5 10V19M9.5 10V19M14.5 10V19M19 10V19" stroke="#C9A56E" stroke-width="1.4"/><path d="M3 20H21" stroke="#C9A56E" stroke-width="1.4"/></svg>
     Meridian Trust
   </a>
@@ -174,38 +173,11 @@
     if(valid){
       submitBtn.textContent = 'Creating account…';
       submitBtn.disabled = true;
-
-      // Hit your live Render instance endpoint
-      fetch('https://bank-app-owi0.onrender.com/api/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          first: fields.first.value.trim(),
-          last: fields.last.value.trim(),
-          email: fields.email.value.trim(),
-          password: fields.password.value
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
+      setTimeout(function(){
         submitBtn.textContent = 'Create account';
         submitBtn.disabled = false;
-        
-        if(data.status === 'success') {
-            alert(data.message); // Displays "Account created successfully!"
-            window.location.href = 'Login.html'; // Sends them right over to sign in
-        } else {
-            alert("Sign up failed: " + data.message);
-        }
-      })
-      .catch(error => {
-        submitBtn.textContent = 'Create account';
-        submitBtn.disabled = false;
-        alert("Error connecting to the registration server.");
-        console.error('Error:', error);
-      });
+        alert('Demo only — no account system is connected yet.');
+      }, 900);
     }
   });
 </script>
