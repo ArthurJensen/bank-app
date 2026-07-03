@@ -8,7 +8,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app) # Allows your HTML files to talk to this backend
+
+CORS(app, resources={r"/*": {"origins": "*"}}) 
+
+
 
 def get_db_connection():
     # Fetch the unified connection string from your Neon Dashboard
@@ -102,6 +105,53 @@ def get_user(user_id):
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+@app.route('/api/send-money', methods=['POST'])
+def send_money():
+    data = request.json
+
+    sender_id = data.get('sender_id')
+    recipient_email = data.get('recipient')
+    amount = float(data.get('amount'))
+
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        # 1. Take money away from sender
+        cur.execute(
+            "UPDATE users SET balance = balance - %s WHERE id = %s",
+            (amount, sender_id)
+        )
+
+        # 2. Add money to recipient
+        cur.execute(
+            "UPDATE users SET balance = balance + %s WHERE email = %s",
+            (amount, recipient_email)
+        )
+
+        # 3. Save both changes together
+        conn.commit()
+
+        cur.close()
+        conn.close()
+
+        return jsonify({
+            "status": "success",
+            "message": "Money sent successfully!"
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+    
+@app.route('/api/test-send-money', methods=['GET'])
+def test_send_money():
+    return jsonify({"message": "send money route area exists"})
+@app.route('/')
+def home():
+    return "Bank backend is running"
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
