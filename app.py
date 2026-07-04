@@ -99,10 +99,10 @@ def signup():
         cur = conn.cursor()
 
         cur.execute("""
-            INSERT INTO users (first_name, email, password_hash)
-            VALUES (%s, %s, %s)
+            INSERT INTO users (first_name, email, password_hash, balance)
+            VALUES (%s, %s, %s, %s)
             RETURNING id
-        """, (first_name, email, password))
+        """, (first_name, email, password, 10000))
 
         new_user_id = cur.fetchone()[0]
         print("USER CREATED:", new_user_id)
