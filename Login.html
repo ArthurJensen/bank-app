@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Log in — Meridian Trust</title>
 
+
+<!--Loads the css and the favicon into the website-->
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,13 +18,15 @@
 <body>
 
 
+  <!-- Adds the simple logo in the top left-->
 <header>
   <a href="index.html" class="brand">
-    //Adds the simple logo you see in the top left.
-    <svg class="brand-mark" viewBox="0 0 24 24" fill="none"><path d="M3 9L12 3L21 9V10H3V9Z" stroke="#C9A56E" stroke-width="1.4" stroke-linejoin="round"/><path d="M5 10V19M9.5 10V19M14.5 10V19M19 10V19" stroke="#C9A56E" stroke-width="1.4"/><path d="M3 20H21" stroke="#C9A56E" stroke-width="1.4"/></svg>
+        <svg class="brand-mark" viewBox="0 0 24 24" fill="none"><path d="M3 9L12 3L21 9V10H3V9Z" stroke="#C9A56E" stroke-width="1.4" stroke-linejoin="round"/><path d="M5 10V19M9.5 10V19M14.5 10V19M19 10V19" stroke="#C9A56E" stroke-width="1.4"/><path d="M3 20H21" stroke="#C9A56E" stroke-width="1.4"/></svg>
     Meridian Trust
   </a>
 </header>
+
+
 
 <main>
   <div class="card">
@@ -68,17 +72,21 @@
 <footer>© 2026 Meridian Trust · Member FDIC · Routing 071925511</footer>
 
 <script>
-  const form = document.getElementById('loginForm');
+  //Gets the information that the user has stored in the html with id "____"
+ const form = document.getElementById('loginForm');
   const userField = document.getElementById('userField');
   const pwField = document.getElementById('pwField');
   const username = document.getElementById('username');
   const password = document.getElementById('password');
   const submitBtn = document.getElementById('submitBtn');
+ 
 
+   //When user clicks on the button with the id of submit let the variable valid = true.
   form.addEventListener('submit', function(e){
     e.preventDefault();
     let valid = true;
 
+    //If username contains only spaces or empty characters state that it is an error, and if there are make valid ≠ true
     if(!username.value.trim()){
       userField.classList.add('field-error');
       valid = false;
@@ -86,6 +94,7 @@
       userField.classList.remove('field-error');
     }
 
+    //Do the same with the password
     if(!password.value){
       pwField.classList.add('field-error');
       valid = false;
@@ -93,6 +102,7 @@
       pwField.classList.remove('field-error');
     }
 
+    //Prevents a person from clicking submit multiple times ?
     if(valid){
       submitBtn.textContent = 'Signing in…';
       submitBtn.disabled = true;
@@ -103,7 +113,11 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: username.value.trim(), password: password.value })
       })
+
+      // Convert the server response into usable data
       .then(response => response.json())
+
+// Process the response and reset the login button
       .then(data => {
         submitBtn.textContent = 'Log in';
         submitBtn.disabled = false;
@@ -118,6 +132,8 @@
             alert("Login failed: " + data.message);
         }
       })
+      
+      //If it manages to catch an error while signing in, then state that there is an error.
       .catch(error => {
         submitBtn.textContent = 'Log in';
         submitBtn.disabled = false;
@@ -127,6 +143,7 @@
     }
   });
 
+  // Remove the error highlight when the user starts typing
   [username, password].forEach(function(input){
     input.addEventListener('input', function(){
       input.closest('.field').classList.remove('field-error');
