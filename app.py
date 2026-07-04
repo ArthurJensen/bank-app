@@ -11,8 +11,6 @@ app = Flask(__name__)
 
 CORS(app, resources={r"/*": {"origins": "*"}}) 
 
-
-
 def get_db_connection():
     # Fetch the unified connection string from your Neon Dashboard
     database_url = os.getenv("DATABASE_URL")
@@ -52,32 +50,75 @@ def login():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+# @app.route('/api/signup', methods=['POST'])
+# def signup():
+#     data = request.json
+#     first_name = data.get('first')
+#     last_name = data.get('last')
+#     email = data.get('email')
+#     password = data.get('password') # In production, hash this!
+
+#     try:
+#         conn = get_db_connection()
+#         cur = conn.cursor()
+        
+#         # Insert the fresh registration data directly into your Neon cloud database
+#         cur.execute(
+#             "INSERT INTO users (first_name, email, password_hash) VALUES (%s, %s, %s)",
+#             (first_name, email, password)
+#         )
+#         conn.commit()
+        
+#         cur.close()
+#         conn.close()
+#         return jsonify({"status": "success", "message": "Account created successfully!"}), 201
+        
+#     except psycopg2.errors.UniqueViolation:
+#         # Prevents duplicate registrations with the same email address
+#         return jsonify({"status": "error", "message": "An account with this email already exists."}), 400
+#     except Exception as e:
+#         return jsonify({"status": "error", "message": str(e)}), 500
 @app.route('/api/signup', methods=['POST'])
 def signup():
     data = request.json
     first_name = data.get('first')
     last_name = data.get('last')
     email = data.get('email')
-    password = data.get('password') # In production, hash this!
+    password = data.get('password')
 
     try:
         conn = get_db_connection()
         cur = conn.cursor()
-        
-        # Insert the fresh registration data directly into your Neon cloud database
+
         cur.execute(
-            "INSERT INTO users (first_name, email, password_hash) VALUES (%s, %s, %s)",
+            """
+            INSERT INTO users (first_name, email, password_hash)
+            VALUES (%s, %s, %s)
+            RETURNING id
+            """,
             (first_name, email, password)
         )
+
+        new_user_id = cur.fetchone()[0]
+
+        cur.execute(
+            """
+            INSERT INTO accounts (user_id, account_type, account_name, balance)
+            VALUES (%s, %s, %s, %s)
+            """,
+            (new_user_id, "checking", "Everyday Checking", 1000)
+        )
+
         conn.commit()
-        
+
         cur.close()
         conn.close()
+
         return jsonify({"status": "success", "message": "Account created successfully!"}), 201
-        
+
     except psycopg2.errors.UniqueViolation:
-        # Prevents duplicate registrations with the same email address
         return jsonify({"status": "error", "message": "An account with this email already exists."}), 400
+
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
