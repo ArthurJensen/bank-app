@@ -12,12 +12,16 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}}) 
 
 def get_db_connection():
-    # Fetch the unified connection string from your Neon Dashboard
     database_url = os.getenv("DATABASE_URL")
-    
-    # Connect directly using the Neon connection string (SSL is handled automatically via the URL)
-    return psycopg2.connect(database_url)
 
+    print("DATABASE_URL exists:", database_url is not None)
+
+    if not database_url:
+        raise Exception("DATABASE_URL is missing. Create a .env file or set the environment variable.")
+
+    print("DATABASE_URL starts with:", database_url[:12])
+
+    return psycopg2.connect(database_url)
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.json
@@ -82,12 +86,18 @@ def login():
 def signup():
     data = request.json
     first_name = data.get('first')
-    last_name = data.get('last')
     email = data.get('email')
     password = data.get('password')
 
+    conn = None
+    cur = None
+
     try:
+        print("SIGNUP STARTED")
+
         conn = get_db_connection()
+        print("DATABASE CONNECTED")
+
         cur = conn.cursor()
 
         cur.execute(
@@ -100,28 +110,54 @@ def signup():
         )
 
         new_user_id = cur.fetchone()[0]
+        print("USER CREATED WITH ID:", new_user_id)
 
         cur.execute(
             """
             INSERT INTO accounts (user_id, account_type, account_name, balance)
             VALUES (%s, %s, %s, %s)
+            RETURNING id
             """,
             (new_user_id, "checking", "Everyday Checking", 1000)
         )
 
+        new_account_id = cur.fetchone()[0]
+        print("ACCOUNT CREATED WITH ID:", new_account_id)
+
         conn.commit()
+        print("COMMIT SUCCESSFUL")
 
-        cur.close()
-        conn.close()
+        return jsonify({
+            "status": "success",
+            "message": "Account created successfully!",
+            "user_id": new_user_id,
+            "account_id": new_account_id
+        }), 201
 
-        return jsonify({"status": "success", "message": "Account created successfully!"}), 201
-
-    except psycopg2.errors.UniqueViolation:
-        return jsonify({"status": "error", "message": "An account with this email already exists."}), 400
+    except psycopg2.errors.UniqueViolation as e:
+        if conn:
+            conn.rollback()
+        print("UNIQUE EMAIL ERROR:", e)
+        return jsonify({
+            "status": "error",
+            "message": "An account with this email already exists."
+        }), 400
 
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+        if conn:
+            conn.rollback()
+        print("SIGNUP ERROR:", e)
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
 
+    finally:
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
+        print("DATABASE CLOSED")
 @app.route('/api/user/<int:user_id>', methods=['GET'])
 def get_user(user_id):
     try:
