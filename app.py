@@ -12,16 +12,12 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}}) 
 
 def get_db_connection():
+    # Fetch the unified connection string from your Neon Dashboard
     database_url = os.getenv("DATABASE_URL")
-
-    print("DATABASE_URL exists:", database_url is not None)
-
-    if not database_url:
-        raise Exception("DATABASE_URL is missing. Create a .env file or set the environment variable.")
-
-    print("DATABASE_URL starts with:", database_url[:12])
-
+    
+    # Connect directly using the Neon connection string (SSL is handled automatically via the URL)
     return psycopg2.connect(database_url)
+
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.json
@@ -84,6 +80,7 @@ def login():
 #         return jsonify({"status": "error", "message": str(e)}), 500
 @app.route('/api/signup', methods=['POST'])
 def signup():
+    raise Exception("I AM INSIDE SIGNUP")
     data = request.json
     first_name = data.get('first')
     email = data.get('email')
@@ -94,35 +91,32 @@ def signup():
 
     try:
         print("SIGNUP STARTED")
+        print("DATA RECEIVED:", data)
 
         conn = get_db_connection()
         print("DATABASE CONNECTED")
 
         cur = conn.cursor()
 
-        cur.execute(
-            """
+        cur.execute("""
             INSERT INTO users (first_name, email, password_hash)
             VALUES (%s, %s, %s)
             RETURNING id
-            """,
-            (first_name, email, password)
-        )
+        """, (first_name, email, password))
 
         new_user_id = cur.fetchone()[0]
-        print("USER CREATED WITH ID:", new_user_id)
+        print("USER CREATED:", new_user_id)
 
-        cur.execute(
-            """
+        print("ABOUT TO CREATE ACCOUNT FOR USER:", new_user_id)
+
+        cur.execute("""
             INSERT INTO accounts (user_id, account_type, account_name, balance)
             VALUES (%s, %s, %s, %s)
-            RETURNING id
-            """,
-            (new_user_id, "checking", "Everyday Checking", 1000)
-        )
+            RETURNING id, user_id, account_type, account_name, balance
+        """, (new_user_id, "checking", "Everyday Checking", 1000))
 
-        new_account_id = cur.fetchone()[0]
-        print("ACCOUNT CREATED WITH ID:", new_account_id)
+        new_account = cur.fetchone()
+        print("ACCOUNT CREATED:", new_account)
 
         conn.commit()
         print("COMMIT SUCCESSFUL")
@@ -131,26 +125,26 @@ def signup():
             "status": "success",
             "message": "Account created successfully!",
             "user_id": new_user_id,
-            "account_id": new_account_id
+            "account": {
+                "id": new_account[0],
+                "user_id": new_account[1],
+                "account_type": new_account[2],
+                "account_name": new_account[3],
+                "balance": str(new_account[4])
+            }
         }), 201
 
     except psycopg2.errors.UniqueViolation as e:
         if conn:
             conn.rollback()
-        print("UNIQUE EMAIL ERROR:", e)
-        return jsonify({
-            "status": "error",
-            "message": "An account with this email already exists."
-        }), 400
+        print("UNIQUE ERROR:", e)
+        return jsonify({"status": "error", "message": "Email already exists."}), 400
 
     except Exception as e:
         if conn:
             conn.rollback()
         print("SIGNUP ERROR:", e)
-        return jsonify({
-            "status": "error",
-            "message": str(e)
-        }), 500
+        return jsonify({"status": "error", "message": str(e)}), 500
 
     finally:
         if cur:
