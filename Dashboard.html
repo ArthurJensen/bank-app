@@ -1,251 +1,271 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard — Meridian Trust</title>
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link rel="icon" type="image/x-icon" href="favicon.ico">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="css/global.css">
-<link rel="stylesheet" href="css/components.css">
-<link rel="stylesheet" href="css/exampleaccount.css">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,450;0,9..144,600;1,9..144,450&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
- 
-  .wrap{max-width:1080px; margin:0 auto; padding:0 32px;}
 
-  /* NAV */
-  header{
-    border-bottom:1px solid var(--ink-line);
-    background:var(--ink-deep);
-  }
-  
-</style>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Meridian Trust</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/exampleaccount.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,450;0,9..144,600;1,9..144,450&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    /* NAV */
+    header {
+      border-bottom: 1px solid var(--ink-line);
+      background: var(--ink-deep);
+    }
+  </style>
 </head>
+
 <body>
 
-<header>
-  <nav class="wrap nav-row">
-    <a href="index.html" class="brand">
-      <svg class="brand-mark" viewBox="0 0 24 24" fill="none"><path d="M3 9L12 3L21 9V10H3V9Z" stroke="#C9A56E" stroke-width="1.4" stroke-linejoin="round"/><path d="M5 10V19M9.5 10V19M14.5 10V19M19 10V19" stroke="#C9A56E" stroke-width="1.4"/><path d="M3 20H21" stroke="#C9A56E" stroke-width="1.4"/></svg>
-      Meridian Trust
-    </a>
-    <div class="nav-links">
-      <a href="dashboard.html" class="active">Dashboard</a>
-      <a href="SendMoney.html">Transfers</a>
-      <a href="card.html">Cards</a>
-      <a href="#">Statements</a>
-    </div>
-    <div class="nav-right">
-      <div class="avatar">JD</div>
-      <a href="Login.html" class="logout-btn" id="logoutBtn">Log out</a>
-    </div>
-  </nav>
-</header>
-
-<main class="wrap">
-
-  <div class="greeting">
-    <div>
-      <h1 id="userGreeting">Good afternoon.</h1>
-      <p>Here's where things stand across all your accounts.</p>
-    </div>
-    <span class="as-of">Balances as of Jun 30, 2026 · 2:41 PM</span>
-  </div>
-
-  <div class="total-card">
-    <div>
-      <div class="total-label">Total balance</div>
-      <div class="total-amount" id="userBalance">$0.00</div>
-      <div class="total-change">▲ $412.30 (1.2%) this month</div>
-    </div>
-    <div class="quick-actions">
-      <a href="SendMoney.html" class="qa-btn primary">↗ Send money</a>
-      <a href="#" class="qa-btn">＋ Deposit check</a>
-      <a href="#" class="qa-btn">⇄ Transfer</a>
-    </div>
-  </div>
-
-  <div class="section-label">Your accounts</div>
-  <div class="accounts-grid">
-    <div class="acct-card">
-      <div class="acct-top">
-        <span class="acct-type">Checking</span>
-        <span class="acct-num">••4471</span>
+  <header>
+    <nav class="wrap nav-row">
+      <a href="index.html" class="brand">
+        <svg class="brand-mark" viewBox="0 0 24 24" fill="none">
+          <path d="M3 9L12 3L21 9V10H3V9Z" stroke="#C9A56E" stroke-width="1.4" stroke-linejoin="round" />
+          <path d="M5 10V19M9.5 10V19M14.5 10V19M19 10V19" stroke="#C9A56E" stroke-width="1.4" />
+          <path d="M3 20H21" stroke="#C9A56E" stroke-width="1.4" />
+        </svg>
+        Meridian Trust
+      </a>
+      <div class="nav-links">
+        <a href="dashboard.html" class="active">Dashboard</a>
+        <a href="SendMoney.html">Transfers</a>
+        <a href="card.html">Cards</a>
+        <a href="#">Statements</a>
       </div>
-      <div class="acct-name">Everyday Checking</div>
-      <div class="acct-balance">$4,238.92</div>
-      <div class="acct-sub">Available now</div>
-    </div>
-    <div class="acct-card">
-      <div class="acct-top">
-        <span class="acct-type">Savings</span>
-        <span class="acct-num">••8823</span>
+      <div class="nav-right">
+        <div class="avatar">JD</div>
+        <a href="Login.html" class="logout-btn" id="logoutBtn">Log out</a>
       </div>
-      <div class="acct-name">High-Yield Savings</div>
-      <div class="acct-balance">$21,573.75</div>
-      <div class="acct-sub">4.35% APY · earning $78/mo</div>
-    </div>
-    <div class="acct-card">
-      <div class="acct-top">
-        <span class="acct-type">CD</span>
-        <span class="acct-num">••2290</span>
-      </div>
-      <div class="acct-name">12-Month CD</div>
-      <div class="acct-balance">$9,000.00</div>
-      <div class="acct-sub">Matures Mar 14, 2027</div>
-    </div>
-  </div>
+    </nav>
+  </header>
 
-  <div class="section-label">Recent transactions</div>
-  <div class="txn-panel">
-    <div class="txn-head">
-      <h3>Activity</h3>
-      <div class="txn-filter">
-        <span class="filter-chip active">All</span>
-        <span class="filter-chip">Money in</span>
-        <span class="filter-chip">Money out</span>
+  <main class="wrap">
+
+    <div class="greeting">
+      <div>
+        <h1 id="userGreeting">Good afternoon.</h1>
+        <p>Here's where things stand across all your accounts.</p>
+      </div>
+      <span class="as-of">Balances as of Jun 30, 2026 · 2:41 PM</span>
+    </div>
+
+    <div class="total-card">
+      <div>
+        <div class="total-label">Total balance</div>
+        <div class="total-amount" id="userBalance">$0.00</div>
+        <div class="total-change">▲ $412.30 (1.2%) this month</div>
+      </div>
+      <div class="quick-actions">
+        <a href="SendMoney.html" class="qa-btn primary">↗ Send money</a>
+        <a href="#" class="qa-btn">＋ Deposit check</a>
+        <a href="#" class="qa-btn">⇄ Transfer</a>
       </div>
     </div>
 
-    <div class="txn-row">
-      <div class="txn-icon credit">↓</div>
-      <div class="txn-desc">
-        <div class="name">Payroll Deposit — Horizon Design Co.</div>
-        <div class="meta">Direct deposit · Checking ••4471</div>
+    <div class="section-label">Your accounts</div>
+    <div class="accounts-grid" id="accountsGrid">
+      <div class="acct-card">
+        <div class="acct-top">
+          <span class="acct-type" id="accountType">Checking</span>
+          <span class="acct-num" id="accountNumber">••0000</span>
+        </div>
+        <div class="acct-name" id="accountName">Everyday Checking</div>
+        <div class="acct-balance" id="accountBalance">$4,238.92</div>
+        <div class="acct-sub">Available now</div>
       </div>
-      <div class="txn-date">Jun 28</div>
-      <div class="txn-amt credit">+$2,140.00</div>
     </div>
 
-    <div class="txn-row">
-      <div class="txn-icon debit">↑</div>
-      <div class="txn-desc">
-        <div class="name">Green Leaf Grocers</div>
-        <div class="meta">Card purchase · ••4471</div>
+    <div class="section-label">Recent transactions</div>
+    <div class="txn-panel">
+      <div class="txn-head">
+        <h3>Activity</h3>
+        <div class="txn-filter">
+          <span class="filter-chip active">All</span>
+          <span class="filter-chip">Money in</span>
+          <span class="filter-chip">Money out</span>
+        </div>
       </div>
-      <div class="txn-date">Jun 27</div>
-      <div class="txn-amt debit">–$86.42</div>
-    </div>
 
-    <div class="txn-row">
-      <div class="txn-icon debit">↑</div>
-      <div class="txn-desc">
-        <div class="name">Transfer to Savings</div>
-        <div class="meta">Internal transfer</div>
+      <div class="txn-row">
+        <div class="txn-icon credit">↓</div>
+        <div class="txn-desc">
+          <div class="name">Payroll Deposit — Horizon Design Co.</div>
+          <div class="meta">Direct deposit · Checking ••4471</div>
+        </div>
+        <div class="txn-date">Jun 28</div>
+        <div class="txn-amt credit">+$2,140.00</div>
       </div>
-      <div class="txn-date">Jun 26</div>
-      <div class="txn-amt debit">–$500.00</div>
-    </div>
 
-    <div class="txn-row">
-      <div class="txn-icon debit">↑</div>
-      <div class="txn-desc">
-        <div class="name">Riverline Apartments</div>
-        <div class="meta">Rent · Autopay · ••4471</div>
+      <div class="txn-row">
+        <div class="txn-icon debit">↑</div>
+        <div class="txn-desc">
+          <div class="name">Green Leaf Grocers</div>
+          <div class="meta">Card purchase · ••4471</div>
+        </div>
+        <div class="txn-date">Jun 27</div>
+        <div class="txn-amt debit">–$86.42</div>
       </div>
-      <div class="txn-date">Jun 25</div>
-      <div class="txn-amt debit">–$1,850.00</div>
-    </div>
 
-    <div class="txn-row">
-      <div class="txn-icon credit">↓</div>
-      <div class="txn-desc">
-        <div class="name">Interest Payment</div>
-        <div class="meta">High-Yield Savings ••8823</div>
+      <div class="txn-row">
+        <div class="txn-icon debit">↑</div>
+        <div class="txn-desc">
+          <div class="name">Transfer to Savings</div>
+          <div class="meta">Internal transfer</div>
+        </div>
+        <div class="txn-date">Jun 26</div>
+        <div class="txn-amt debit">–$500.00</div>
       </div>
-      <div class="txn-date">Jun 24</div>
-      <div class="txn-amt credit">+$78.14</div>
-    </div>
 
-    <div class="txn-row">
-      <div class="txn-icon debit">↑</div>
-      <div class="txn-desc">
-        <div class="name">Cascade Coffee Roasters</div>
-        <div class="meta">Card purchase · ••4471</div>
+      <div class="txn-row">
+        <div class="txn-icon debit">↑</div>
+        <div class="txn-desc">
+          <div class="name">Riverline Apartments</div>
+          <div class="meta">Rent · Autopay · ••4471</div>
+        </div>
+        <div class="txn-date">Jun 25</div>
+        <div class="txn-amt debit">–$1,850.00</div>
       </div>
-      <div class="txn-date">Jun 23</div>
-      <div class="txn-amt debit">–$6.75</div>
-    </div>
 
-    <div class="txn-row">
-      <div class="txn-icon credit">↓</div>
-      <div class="txn-desc">
-        <div class="name">Refund — Northside Hardware</div>
-        <div class="meta">Card refund · ••4471</div>
+      <div class="txn-row">
+        <div class="txn-icon credit">↓</div>
+        <div class="txn-desc">
+          <div class="name">Interest Payment</div>
+          <div class="meta">High-Yield Savings ••8823</div>
+        </div>
+        <div class="txn-date">Jun 24</div>
+        <div class="txn-amt credit">+$78.14</div>
       </div>
-      <div class="txn-date">Jun 21</div>
-      <div class="txn-amt credit">+$34.00</div>
+
+      <div class="txn-row">
+        <div class="txn-icon debit">↑</div>
+        <div class="txn-desc">
+          <div class="name">Cascade Coffee Roasters</div>
+          <div class="meta">Card purchase · ••4471</div>
+        </div>
+        <div class="txn-date">Jun 23</div>
+        <div class="txn-amt debit">–$6.75</div>
+      </div>
+
+      <div class="txn-row">
+        <div class="txn-icon credit">↓</div>
+        <div class="txn-desc">
+          <div class="name">Refund — Northside Hardware</div>
+          <div class="meta">Card refund · ••4471</div>
+        </div>
+        <div class="txn-date">Jun 21</div>
+        <div class="txn-amt credit">+$34.00</div>
+      </div>
+
+      <div class="txn-footer">
+        <a href="#" class="see-all">View full statement →</a>
+      </div>
     </div>
 
-    <div class="txn-footer">
-      <a href="#" class="see-all">View full statement →</a>
-    </div>
-  </div>
+  </main>
 
-</main>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const userId = localStorage.getItem('bank_user_id');
+      console.log("USER ID FROM LOCAL STORAGE:", userId);
 
-<script>
-  const chips = document.querySelectorAll('.filter-chip');
-  const rows = document.querySelectorAll('.txn-row');
+      if (!userId) {
+        window.location.href = 'Login.html';
+        return;
+      }
 
-  chips.forEach(function(chip){
-    chip.addEventListener('click', function(){
-      chips.forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      const mode = chip.textContent.trim();
-
-      rows.forEach(function(row){
-        const isCredit = row.querySelector('.txn-amt').classList.contains('credit');
-        if(mode === 'All'){ row.style.display = 'grid'; }
-        else if(mode === 'Money in'){ row.style.display = isCredit ? 'grid' : 'none'; }
-        else if(mode === 'Money out'){ row.style.display = isCredit ? 'none' : 'grid'; }
-      });
-    });
-  });
-
-  // Dynamic Data Fetching Logic
-  document.addEventListener('DOMContentLoaded', () => {
-    // 1. Get the user ID we saved during login
-    const userId = localStorage.getItem('bank_user_id');
-
-    // 2. If they don't have an ID, kick them back to the login page
-    if (!userId) {
-      window.location.href = 'Login.html';
-    } else {
-      // 3. Fetch their specific data from your live Render backend
       fetch(`https://bank-app-owi0.onrender.com/api/user/${userId}`)
         .then(response => response.json())
         .then(data => {
           if (data.status === 'success') {
-            // 4. Inject the database data directly into the HTML!
-            document.getElementById('userGreeting').textContent = `Good afternoon, ${data.first_name}.`;
-            
-            // Format the number to look like money
-            const formattedBalance = parseFloat(data.balance).toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'USD'
-            });
-            document.getElementById('userBalance').textContent = formattedBalance;
+            document.getElementById('userGreeting').textContent =
+              `Good afternoon, ${data.first_name}.`;
           } else {
-            console.error("Could not load user data: ", data.message);
+            console.error("Could not load user data:", data.message);
           }
         })
         .catch(error => console.error('Error fetching user data:', error));
-    }
 
-    // 5. Handle Logout
-    const logoutBtn = document.getElementById('logoutBtn');
-    if(logoutBtn) {
-      logoutBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        localStorage.removeItem('bank_user_id');
-        window.location.href = 'Login.html';
+      fetch(`https://bank-app-owi0.onrender.com/api/user/${userId}/accounts`)
+        .then(response => {
+          console.log("ACCOUNTS RESPONSE STATUS:", response.status);
+          return response.json();
+        })
+        .then(data => {
+          console.log("ACCOUNTS DATA FROM BACKEND:", data);
+
+          if (data.status === 'success' && data.accounts.length > 0) {
+            const account = data.accounts[0];
+
+            console.log("FIRST ACCOUNT:", account);
+
+            document.getElementById("accountType").textContent = account.account_type;
+            document.getElementById("accountNumber").textContent =
+              `••${String(account.id).padStart(4, "0")}`;
+            document.getElementById("accountName").textContent = account.account_name;
+
+            const formattedBalance = Number(account.balance).toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD'
+            });
+
+            document.getElementById("accountBalance").textContent = formattedBalance;
+          } else {
+            console.error("No accounts found or bad status:", data);
+          }
+        })
+        .catch(error => console.error('ACCOUNTS FETCH ERROR:', error));
+
+      const chips = document.querySelectorAll('.filter-chip');
+      const rows = document.querySelectorAll('.txn-row');
+
+      chips.forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          chips.forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+
+          const mode = chip.textContent.trim();
+
+          rows.forEach(function (row) {
+            const isCredit = row.querySelector('.txn-amt').classList.contains('credit');
+
+            if (mode === 'All') {
+              row.style.display = 'grid';
+            } else if (mode === 'Money in') {
+              row.style.display = isCredit ? 'grid' : 'none';
+            } else if (mode === 'Money out') {
+              row.style.display = isCredit ? 'none' : 'grid';
+            }
+          });
+        });
       });
-    }
-  });
-</script>
+
+      const logoutBtn = document.getElementById('logoutBtn');
+
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          localStorage.removeItem('bank_user_id');
+          window.location.href = 'Login.html';
+        });
+      }
+    });
+  </script>
 
 </body>
+
 </html>

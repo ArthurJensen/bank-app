@@ -216,7 +216,50 @@ def send_money():
             "status": "error",
             "message": str(e)
         }), 500
-    
+@app.route("/api/user/<int:user_id>/accounts", methods=["GET"])
+def get_user_accounts(user_id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    try:
+        cur.execute(
+            """
+            SELECT id, account_type, account_name, balance
+            FROM accounts
+            WHERE user_id = %s
+            ORDER BY id
+            """,
+            (user_id,)
+        )
+
+        accounts = cur.fetchall()
+
+        account_list = []
+
+        for account in accounts:
+            account_list.append({
+                "id": account[0],
+                "account_type": account[1],
+                "account_name": account[2],
+                "balance": float(account[3])
+            })
+
+        return {
+            "status": "success",
+            "accounts": account_list
+        }
+
+    except Exception as e:
+        print("Accounts fetch error:", e)
+        return {
+            "status": "error",
+            "message": "Could not load accounts"
+        }, 500
+
+    finally:
+        cur.close()
+        conn.close()
+        
 @app.route('/api/test-send-money', methods=['GET'])
 def test_send_money():
     return jsonify({"message": "send money route area exists"})
