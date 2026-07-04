@@ -259,14 +259,16 @@ def get_user_accounts(user_id):
     finally:
         cur.close()
         conn.close()
-        
+
 @app.route('/api/test-send-money', methods=['GET'])
 def test_send_money():
     return jsonify({"message": "send money route area exists"})
 @app.route('/')
 def home():
     return "Bank backend is running"
-
+@app.route('/api/test-accounts-route')
+def test_accounts_route():
+    return jsonify({"message": "accounts route exists"})
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
