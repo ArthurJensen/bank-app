@@ -11,8 +11,6 @@ app = Flask(__name__)
 
 CORS(app, resources={r"/*": {"origins": "*"}}) 
 
-
-
 def get_db_connection():
     # Fetch the unified connection string from your Neon Dashboard
     database_url = os.getenv("DATABASE_URL")
@@ -52,35 +50,108 @@ def login():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+# @app.route('/api/signup', methods=['POST'])
+# def signup():
+#     data = request.json
+#     first_name = data.get('first')
+#     last_name = data.get('last')
+#     email = data.get('email')
+#     password = data.get('password') # In production, hash this!
+
+#     try:
+#         conn = get_db_connection()
+#         cur = conn.cursor()
+        
+#         # Insert the fresh registration data directly into your Neon cloud database
+#         cur.execute(
+#             "INSERT INTO users (first_name, email, password_hash) VALUES (%s, %s, %s)",
+#             (first_name, email, password)
+#         )
+#         conn.commit()
+        
+#         cur.close()
+#         conn.close()
+#         return jsonify({"status": "success", "message": "Account created successfully!"}), 201
+        
+#     except psycopg2.errors.UniqueViolation:
+#         # Prevents duplicate registrations with the same email address
+#         return jsonify({"status": "error", "message": "An account with this email already exists."}), 400
+#     except Exception as e:
+#         return jsonify({"status": "error", "message": str(e)}), 500
 @app.route('/api/signup', methods=['POST'])
 def signup():
+
     data = request.json
     first_name = data.get('first')
-    last_name = data.get('last')
     email = data.get('email')
-    password = data.get('password') # In production, hash this!
+    password = data.get('password')
+
+    conn = None
+    cur = None
 
     try:
+        print("SIGNUP STARTED")
+        print("DATA RECEIVED:", data)
+
         conn = get_db_connection()
+        print("DATABASE CONNECTED")
+
         cur = conn.cursor()
-        
-        # Insert the fresh registration data directly into your Neon cloud database
-        cur.execute(
-            "INSERT INTO users (first_name, email, password_hash) VALUES (%s, %s, %s)",
-            (first_name, email, password)
-        )
+
+        cur.execute("""
+            INSERT INTO users (first_name, email, password_hash)
+            VALUES (%s, %s, %s)
+            RETURNING id
+        """, (first_name, email, password))
+
+        new_user_id = cur.fetchone()[0]
+        print("USER CREATED:", new_user_id)
+
+        print("ABOUT TO CREATE ACCOUNT FOR USER:", new_user_id)
+
+        cur.execute("""
+            INSERT INTO accounts (user_id, account_type, account_name, balance)
+            VALUES (%s, %s, %s, %s)
+            RETURNING id, user_id, account_type, account_name, balance
+        """, (new_user_id, "checking", "Everyday Checking", 1000))
+
+        new_account = cur.fetchone()
+        print("ACCOUNT CREATED:", new_account)
+
         conn.commit()
-        
-        cur.close()
-        conn.close()
-        return jsonify({"status": "success", "message": "Account created successfully!"}), 201
-        
-    except psycopg2.errors.UniqueViolation:
-        # Prevents duplicate registrations with the same email address
-        return jsonify({"status": "error", "message": "An account with this email already exists."}), 400
+        print("COMMIT SUCCESSFUL")
+
+        return jsonify({
+            "status": "success",
+            "message": "Account created successfully!",
+            "user_id": new_user_id,
+            "account": {
+                "id": new_account[0],
+                "user_id": new_account[1],
+                "account_type": new_account[2],
+                "account_name": new_account[3],
+                "balance": str(new_account[4])
+            }
+        }), 201
+
+    except psycopg2.errors.UniqueViolation as e:
+        if conn:
+            conn.rollback()
+        print("UNIQUE ERROR:", e)
+        return jsonify({"status": "error", "message": "Email already exists."}), 400
+
     except Exception as e:
+        if conn:
+            conn.rollback()
+        print("SIGNUP ERROR:", e)
         return jsonify({"status": "error", "message": str(e)}), 500
 
+    finally:
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
+        print("DATABASE CLOSED")
 @app.route('/api/user/<int:user_id>', methods=['GET'])
 def get_user(user_id):
     try:
