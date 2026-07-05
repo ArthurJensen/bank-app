@@ -178,105 +178,106 @@
 
   </main>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const userId = localStorage.getItem('bank_user_id');
-      console.log("USER ID FROM LOCAL STORAGE:", userId);
+ <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const userId = localStorage.getItem('bank_user_id');
+    console.log("USER ID FROM LOCAL STORAGE:", userId);
 
-      if (!userId) {
-        window.location.href = 'Login.html';
-        return;
-      }
+    if (!userId) {
+      window.location.href = 'Login.html';
+      return;
+    }
 
-      fetch(`https://bank-app-owi0.onrender.com/api/user/${userId}`)
-        .then(response => response.json())
-        .then(data => {
-          if (data.status === 'success') {
-            document.getElementById('userGreeting').textContent =
-              `Good afternoon, ${data.first_name}.`;
-          } else {
-            console.error("Could not load user data:", data.message);
-          }
-        })
-        .catch(error => console.error('Error fetching user data:', error));
+    fetch(`https://bank-app-owi0.onrender.com/api/user/${userId}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          document.getElementById('userGreeting').textContent =
+            `Good afternoon, ${data.first_name}.`;
+        } else {
+          console.error("Could not load user data:", data.message);
+        }
+      })
+      .catch(error => console.error('Error fetching user data:', error));
 
-      fetch(`https://bank-app-owi0.onrender.com/api/user/${userId}/accounts`) // fetch info from flaskbank backend
-        .then(response => {
-          console.log("ACCOUNTS RESPONSE STATUS:", response.status);
-          return response.json();
-        })
-        .then(data => {
-          console.log("ACCOUNTS DATA FROM BACKEND:", data);
-          // after turning into data
-          if (data.status === 'success' && data.accounts.length > 0) {
-            const account = data.accounts[0]; // the account
+    fetch(`https://bank-app-owi0.onrender.com/api/user/${userId}/accounts`)
+      .then(response => {
+        console.log("ACCOUNTS RESPONSE STATUS:", response.status);
+        return response.json();
+      })
+      .then(data => {
+        console.log("ACCOUNTS DATA FROM BACKEND:", data);
 
-            console.log("FIRST ACCOUNT:", account);
-            // all the different info abount the account, is used in elements that showup on frontend
-            document.getElementById("accountType").textContent = account.account_type;
-            document.getElementById("accountNumber").textContent =
-              `••${String(account.id).padStart(4, "0")}`;
-            document.getElementById("accountName").textContent = account.account_name;
+        if (data.status === 'success' && data.accounts.length > 0) {
+          const account = data.accounts[0];
 
-            const formattedBalance = Number(account.balance).toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'USD'
-            });
-            // Add all account balances together for the Total balance card
-            const totalAccountsBalance = data.accounts.reduce((total, account) => {
-              return total + Number(account.balance);
-            }, 0);
+          console.log("FIRST ACCOUNT:", account);
 
-            const formattedTotalBalance = Number(data.total_accounts_balance).toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'USD'
-            });
+          document.getElementById("accountType").textContent = account.account_type;
+          document.getElementById("accountNumber").textContent =
+            `••${String(account.id).padStart(4, "0")}`;
+          document.getElementById("accountName").textContent = account.account_name;
 
-            document.getElementById("userBalance").textContent = formattedTotalBalance;
-
-            document.getElementById("accountBalance").textContent = formattedBalance;
-          } else {
-            console.error("No accounts found or bad status:", data);
-          }
-        })
-        .catch(error => console.error('ACCOUNTS FETCH ERROR:', error));
-
-      const chips = document.querySelectorAll('.filter-chip');
-      const rows = document.querySelectorAll('.txn-row');
-
-      chips.forEach(function (chip) {
-        chip.addEventListener('click', function () {
-          chips.forEach(c => c.classList.remove('active'));
-          chip.classList.add('active');
-
-          const mode = chip.textContent.trim();
-
-          rows.forEach(function (row) {
-            const isCredit = row.querySelector('.txn-amt').classList.contains('credit');
-
-            if (mode === 'All') {
-              row.style.display = 'grid';
-            } else if (mode === 'Money in') {
-              row.style.display = isCredit ? 'grid' : 'none';
-            } else if (mode === 'Money out') {
-              row.style.display = isCredit ? 'none' : 'grid';
-            }
+          const formattedBalance = Number(account.balance).toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD'
           });
+
+          document.getElementById("accountBalance").textContent = formattedBalance;
+
+          const frontendTotal = data.accounts.reduce((total, account) => {
+            return total + Number(account.balance);
+          }, 0);
+
+          const totalAccountsBalance =
+            data.total_accounts_balance !== undefined
+              ? Number(data.total_accounts_balance)
+              : frontendTotal;
+
+          const formattedTotalBalance = totalAccountsBalance.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD'
+          });
+
+          document.getElementById("userBalance").textContent = formattedTotalBalance;
+        } else {
+          console.error("No accounts found or bad status:", data);
+        }
+      })
+      .catch(error => console.error('ACCOUNTS FETCH ERROR:', error));
+
+    const chips = document.querySelectorAll('.filter-chip');
+    const rows = document.querySelectorAll('.txn-row');
+
+    chips.forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        chips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+
+        const mode = chip.textContent.trim();
+
+        rows.forEach(function (row) {
+          const isCredit = row.querySelector('.txn-amt').classList.contains('credit');
+
+          if (mode === 'All') {
+            row.style.display = 'grid';
+          } else if (mode === 'Money in') {
+            row.style.display = isCredit ? 'grid' : 'none';
+          } else if (mode === 'Money out') {
+            row.style.display = isCredit ? 'none' : 'grid';
+          }
         });
       });
-
-      const logoutBtn = document.getElementById('logoutBtn');
-
-      if (logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          localStorage.removeItem('bank_user_id');
-          window.location.href = 'Login.html';
-        });
-      }
     });
-  </script>
 
-</body>
+    const logoutBtn = document.getElementById('logoutBtn');
 
-</html>
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.removeItem('bank_user_id');
+        window.location.href = 'Login.html';
+      });
+    }
+  });
+</script>

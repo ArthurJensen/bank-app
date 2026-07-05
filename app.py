@@ -102,7 +102,7 @@ def signup():
             INSERT INTO users (first_name, email, password_hash, balance)
             VALUES (%s, %s, %s, %s)
             RETURNING id
-        """, (first_name, email, password, 10000))
+        """, (first_name, email, password, 1000))
 
         new_user_id = cur.fetchone()[0]
         print("USER CREATED:", new_user_id)
@@ -268,80 +268,80 @@ def login():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
-@app.route('/api/signup', methods=['POST'])
-def signup():
+# @app.route('/api/signup', methods=['POST'])
+# def signup():
 
-    data = request.json
-    first_name = data.get('first')
-    email = data.get('email')
-    password = data.get('password')
+#     data = request.json
+#     first_name = data.get('first')
+#     email = data.get('email')
+#     password = data.get('password')
 
-    conn = None
-    cur = None
+#     conn = None
+#     cur = None
 
-    try:
-        print("SIGNUP STARTED")
-        print("DATA RECEIVED:", data)
+#     try:
+#         print("SIGNUP STARTED")
+#         print("DATA RECEIVED:", data)
 
-        conn = get_db_connection()
-        print("DATABASE CONNECTED")
+#         conn = get_db_connection()
+#         print("DATABASE CONNECTED")
 
-        cur = conn.cursor()
+#         cur = conn.cursor()
 
-        cur.execute("""
-            INSERT INTO users (first_name, email, password_hash, balance)
-            VALUES (%s, %s, %s, %s)
-            RETURNING id
-        """, (first_name, email, password, 10000))
+#         cur.execute("""
+#             INSERT INTO users (first_name, email, password_hash, balance)
+#             VALUES (%s, %s, %s, %s)
+#             RETURNING id
+#         """, (first_name, email, password, 10000))
 
-        new_user_id = cur.fetchone()[0]
-        print("USER CREATED:", new_user_id)
+#         new_user_id = cur.fetchone()[0]
+#         print("USER CREATED:", new_user_id)
 
-        print("ABOUT TO CREATE ACCOUNT FOR USER:", new_user_id)
+#         print("ABOUT TO CREATE ACCOUNT FOR USER:", new_user_id)
 
-        cur.execute("""
-            INSERT INTO accounts (user_id, account_type, account_name, balance)
-            VALUES (%s, %s, %s, %s)
-            RETURNING id, user_id, account_type, account_name, balance
-        """, (new_user_id, "checking", "Everyday Checking", 1000))
+#         cur.execute("""
+#             INSERT INTO accounts (user_id, account_type, account_name, balance)
+#             VALUES (%s, %s, %s, %s)
+#             RETURNING id, user_id, account_type, account_name, balance
+#         """, (new_user_id, "checking", "Everyday Checking", 1000))
 
-        new_account = cur.fetchone()
-        print("ACCOUNT CREATED:", new_account)
+#         new_account = cur.fetchone()
+#         print("ACCOUNT CREATED:", new_account)
 
-        conn.commit()
-        print("COMMIT SUCCESSFUL")
+#         conn.commit()
+#         print("COMMIT SUCCESSFUL")
 
-        return jsonify({
-            "status": "success",
-            "message": "Account created successfully!",
-            "user_id": new_user_id,
-            "account": {
-                "id": new_account[0],
-                "user_id": new_account[1],
-                "account_type": new_account[2],
-                "account_name": new_account[3],
-                "balance": str(new_account[4])
-            }
-        }), 201
+#         return jsonify({
+#             "status": "success",
+#             "message": "Account created successfully!",
+#             "user_id": new_user_id,
+#             "account": {
+#                 "id": new_account[0],
+#                 "user_id": new_account[1],
+#                 "account_type": new_account[2],
+#                 "account_name": new_account[3],
+#                 "balance": str(new_account[4])
+#             }
+#         }), 201
 
-    except psycopg2.errors.UniqueViolation as e:
-        if conn:
-            conn.rollback()
-        print("UNIQUE ERROR:", e)
-        return jsonify({"status": "error", "message": "Email already exists."}), 400
+#     except psycopg2.errors.UniqueViolation as e:
+#         if conn:
+#             conn.rollback()
+#         print("UNIQUE ERROR:", e)
+#         return jsonify({"status": "error", "message": "Email already exists."}), 400
 
-    except Exception as e:
-        if conn:
-            conn.rollback()
-        print("SIGNUP ERROR:", e)
-        return jsonify({"status": "error", "message": str(e)}), 500
+#     except Exception as e:
+#         if conn:
+#             conn.rollback()
+#         print("SIGNUP ERROR:", e)
+#         return jsonify({"status": "error", "message": str(e)}), 500
 
-    finally:
-        if cur:
-            cur.close()
-        if conn:
-            conn.close()
-        print("DATABASE CLOSED")
+#     finally:
+#         if cur:
+#             cur.close()
+#         if conn:
+#             conn.close()
+#         print("DATABASE CLOSED")
 @app.route("/api/user/<int:user_id>/accounts", methods=["GET"])
 def get_user_accounts(user_id):
     conn = get_db_connection()
