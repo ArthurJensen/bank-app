@@ -212,25 +212,6 @@
         })
         .catch(error => console.error('Error fetching user data:', error));
 
-<<<<<<< HEAD
-      fetch(`https://bank-app-owi0.onrender.com/api/user/${userId}/accounts`) // fetch info from flaskbank backend
-        .then(response => {
-          console.log("ACCOUNTS RESPONSE STATUS:", response.status);
-          return response.json();
-        })
-        .then(data => {
-          console.log("ACCOUNTS DATA FROM BACKEND:", data);
-          // after turning into data
-          if (data.status === 'success' && data.accounts.length > 0) {
-            const account = data.accounts[0]; // the account
-
-            console.log("FIRST ACCOUNT:", account);
-            // all the different info abount the account, is used in elements that showup on frontend
-            document.getElementById("accountType").textContent = account.account_type;
-            document.getElementById("accountNumber").textContent =
-              `••${String(account.id).padStart(4, "0")}`;
-            document.getElementById("accountName").textContent = account.account_name;
-=======
       fetch(`https://bank-app-owi0.onrender.com/api/user/${userId}/accounts`)
         .then(response => response.json())
         .then(data => {
@@ -242,7 +223,6 @@
 
             data.accounts.forEach(account => {
               totalBalance += Number(account.balance);
->>>>>>> 5c1c552 (Break point if anything breaks, roll back to previous commits if this didn't work)
 
               // Work out a sub-label per account type
               let subLabel = 'Available now';
@@ -267,17 +247,6 @@
                   <div class="acct-sub">${subLabel}</div>
                 </div>`;
             });
-            // Add all account balances together for the Total balance card
-            const totalAccountsBalance = data.accounts.reduce((total, account) => {
-              return total + Number(account.balance);
-            }, 0);
-
-            const formattedTotalBalance = Number(data.total_accounts_balance).toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'USD'
-            });
-
-            document.getElementById("userBalance").textContent = formattedTotalBalance;
 
             // Update the total balance at the top
             document.getElementById('userBalance').textContent =
