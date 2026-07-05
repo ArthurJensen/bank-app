@@ -18,19 +18,22 @@ def get_db_connection():
     # Connect directly using the Neon connection string (SSL is handled automatically via the URL)
     return psycopg2.connect(database_url)
 
-@app.route('/api/login', methods=['POST'])
-def login():
-    data = request.json
-    email = data.get('email')
+@app.route('/api/login', methods=['POST']) # send(post) to flask at api/login
+def login(): # a function
+    data = request.json #the json frontend sent
+    # now, data is the json sent, contain a email/password, then you extract that info
+    email = data.get('email') #now variables
     password = data.get('password') # In production, hash this!
 
     try:
-        conn = get_db_connection()
-        cur = conn.cursor()
+        conn = get_db_connection() #opens a connection to neon database, example: phoneline
+        cur = conn.cursor() #connection is phoneline, cursor is a person
         
-        # Check if user exists with this email and password
+        # run sqlcode: SELECT the ID, and first_name
+        # from user table in database
+        # where a email column and password column contain those two %s which are email/password respectivly
         cur.execute(
-            "SELECT id, first_name FROM users WHERE email = %s AND password_hash = %s",
+            "SELECT id, first_name FROM users WHERE email = %s AND password_hash = %s", 
             (email, password)
         )
         user = cur.fetchone()
