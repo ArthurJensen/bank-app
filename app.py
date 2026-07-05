@@ -476,6 +476,43 @@ def get_user_accounts(user_id):
         cur.close()
         conn.close()
 
+@app.route('/api/create-account', methods=['POST'])
+def create_account():
+    data = request.json
+    user_id     = data.get('user_id')
+    account_type = data.get('account_type')   # "checking" or "savings"
+    account_name = data.get('account_name')   # display name
+
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        # Insert the new account with a starting balance of 0
+        cur.execute("""
+            INSERT INTO accounts (user_id, account_type, account_name, balance)
+            VALUES (%s, %s, %s, %s)
+            RETURNING id
+        """, (user_id, account_type, account_name, 0))
+
+        new_id = cur.fetchone()[0]
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        # Generate a readable account number from the database id
+        account_number = f"47{new_id:07d}"
+        formatted = f"{account_number[:4]} {account_number[4:7]} {account_number[7:]}"
+
+        return jsonify({
+            "status": "success",
+            "account_id": new_id,
+            "account_number": formatted
+        }), 201
+
+    except Exception as e:
+        print("CREATE ACCOUNT ERROR:", e)
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 @app.route('/api/test-send-money', methods=['GET'])
 def test_send_money():
     return jsonify({"message": "send money route area exists"})
@@ -489,6 +526,7 @@ def test_accounts_route():
     return jsonify({"message": "accounts route exists"})
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
+
     app.run(host='0.0.0.0', port=port)
 
 @app.route('/api/test-send-money', methods=['GET'])
@@ -498,3 +536,5 @@ def test_send_money():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
+
+
