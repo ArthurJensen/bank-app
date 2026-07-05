@@ -211,7 +211,7 @@ def create_account():
             INSERT INTO accounts (user_id, account_type, account_name, balance)
             VALUES (%s, %s, %s, %s)
             RETURNING id
-        """, (user_id, account_type, account_name, 0))
+        """, (user_id, account_type, account_name, 1000))
 
         new_id = cur.fetchone()[0]
         conn.commit()
