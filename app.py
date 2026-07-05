@@ -526,7 +526,7 @@ def test_accounts_route():
     return jsonify({"message": "accounts route exists"})
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-<<<<<<< HEAD
+
     app.run(host='0.0.0.0', port=port)
 
 @app.route('/api/test-send-money', methods=['GET'])
@@ -538,4 +538,4 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=port)
 =======
     app.run(host='0.0.0.0', port=port)
->>>>>>> 5c1c552 (Break point if anything breaks, roll back to previous commits if this didn't work)
+
