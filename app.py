@@ -429,6 +429,7 @@ def send_money():
             "message": str(e)
         }), 500
 @app.route("/api/user/<int:user_id>/accounts", methods=["GET"])
+@app.route("/api/user/<int:user_id>/accounts", methods=["GET"])
 def get_user_accounts(user_id):
     conn = get_db_connection()
     cur = conn.cursor()
@@ -456,9 +457,12 @@ def get_user_accounts(user_id):
                 "balance": float(account[3])
             })
 
+        total_balance = sum(account["balance"] for account in account_list)
+
         return {
             "status": "success",
-            "accounts": account_list
+            "accounts": account_list,
+            "total_accounts_balance": total_balance
         }
 
     except Exception as e:
