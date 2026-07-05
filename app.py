@@ -151,10 +151,16 @@ def get_user(user_id):
 
 @app.route("/api/user/<int:user_id>/accounts", methods=["GET"])
 def get_user_accounts(user_id):
+
+    # Connect to the PostgreSQL database
     conn = get_db_connection()
+
+    # Create a cursor so we can execute SQL queries
     cur = conn.cursor()
 
     try:
+
+        # Get every account that belongs to this user
         cur.execute(
             """
             SELECT id, account_type, account_name, balance
@@ -162,39 +168,83 @@ def get_user_accounts(user_id):
             WHERE user_id = %s
             ORDER BY id
             """,
-            (user_id,)
+            (user_id,)   # Replace %s with the user's ID safely
         )
 
+        # Store all rows returned from the database
         accounts = cur.fetchall()
+
+        # This list will hold the account data in JSON format
         account_list = []
 
+        # Convert each SQL row into a Python dictionary
         for account in accounts:
             account_list.append({
+
+                # Account's database ID
                 "id": account[0],
+
+                # Example: "checking" or "savings"
                 "account_type": account[1],
+
+                # Example: "Everyday Checking"
                 "account_name": account[2],
+
+                # Convert PostgreSQL numeric type into a normal float
                 "balance": float(account[3])
             })
 
-        total_balance = sum(account["balance"] for account in account_list)
+        # Ask PostgreSQL to calculate the total balance of ALL accounts
+        # that belong to this user
+        cur.execute(
+            """
+            SELECT COALESCE(SUM(balance), 0)
+            FROM accounts
+            WHERE user_id = %s
+            """,
+            (user_id,)
+        )
 
-        return {
+        # Get the total balance returned by PostgreSQL
+        # Example:
+        # Checking = 1000
+        # Savings = 500
+        # High Yield = 2500
+        # total_balance = 4000
+        total_balance = cur.fetchone()[0]
+
+        # Send everything back to the frontend
+        return jsonify({
+
+            # Indicates the request worked
             "status": "success",
+
+            # List containing every account
             "accounts": account_list,
-            "total_accounts_balance": total_balance
-        }
+
+            # Total money across every account
+            "total_accounts_balance": float(total_balance)
+
+        }), 200
 
     except Exception as e:
+
+        # Print the error to the terminal for debugging
         print("Accounts fetch error:", e)
-        return {
+
+        # Send an error response back to the frontend
+        return jsonify({
             "status": "error",
             "message": "Could not load accounts"
-        }, 500
+        }), 500
 
     finally:
-        cur.close()
-        conn.close()
 
+        # Always close the cursor
+        cur.close()
+
+        # Always close the database connection
+        conn.close()
 @app.route('/api/create-account', methods=['POST'])
 def create_account():
     data = request.json

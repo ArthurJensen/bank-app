@@ -202,14 +202,7 @@
         if (data.status === 'success' && data.accounts.length > 0) {
           grid.innerHTML = '';
 
-          const frontendTotal = data.accounts.reduce((total, account) => {
-            return total + Number(account.balance);
-          }, 0);
-
-          const totalBalance =
-            data.total_accounts_balance !== undefined
-              ? Number(data.total_accounts_balance)
-              : frontendTotal;
+          const totalBalance = Number(data.total_accounts_balance);
 
           document.getElementById('userBalance').textContent =
             totalBalance.toLocaleString('en-US', {
