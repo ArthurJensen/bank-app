@@ -7,6 +7,12 @@ from dotenv import load_dotenv
 # Load hidden variables from .env
 load_dotenv()
 
+import resend
+import secrets
+from datetime import datetime, timedelta
+
+resend.api_key = os.getenv("RESEND_API_KEY")
+
 app = Flask(__name__)
 
 CORS(app, resources={r"/*": {"origins": "*"}}) 
@@ -325,6 +331,101 @@ def send_money():
             "status": "error",
             "message": str(e)
         }), 500
+
+@app.route('/api/forgot-password', methods=['POST'])
+def forgot_password():
+    email = request.json.get('email')
+    token = secrets.token_urlsafe(32)
+    expires = datetime.now() + timedelta(hours=1)
+
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        # Remove any existing reset token for this email
+        cur.execute("DELETE FROM password_resets WHERE email = %s", (email,))
+
+        # Store the new token with expiry
+        cur.execute(
+            "INSERT INTO password_resets (email, token, expires_at) VALUES (%s, %s, %s)",
+            (email, token, expires)
+        )
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        # Build the reset link
+        reset_link = f"https://bank-app-owi0.onrender.com/reset-password.html?token={token}"
+
+        # Send the email via Resend
+        resend.Emails.send({
+            "from": "noreply@meridiantrust.com",
+            "to": email,
+            "subject": "Reset your Meridian Trust password",
+            "html": f"""
+                <div style="font-family:sans-serif;max-width:480px;margin:0 auto;">
+                    <h2 style="color:#1B2430;">Reset your password</h2>
+                    <p>We received a request to reset your Meridian Trust password.</p>
+                    <a href="{reset_link}"
+                       style="display:inline-block;background:#B08D57;color:#131A23;padding:12px 24px;
+                              border-radius:3px;text-decoration:none;font-weight:600;margin:16px 0;">
+                        Reset password
+                    </a>
+                    <p style="color:#888;font-size:13px;">This link expires in 1 hour. If you didn't request this, you can safely ignore this email.</p>
+                </div>
+            """
+        })
+
+        # Always return success — never reveal whether the email exists
+        return jsonify({"status": "success"}), 200
+
+    except Exception as e:
+        print("FORGOT PASSWORD ERROR:", e)
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@app.route('/api/reset-password', methods=['POST'])
+def reset_password():
+    token = request.json.get('token')
+    new_password = request.json.get('password')
+
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        # Check token exists and hasn't expired
+        cur.execute(
+            "SELECT email FROM password_resets WHERE token = %s AND expires_at > NOW()",
+            (token,)
+        )
+        row = cur.fetchone()
+
+        if not row:
+            cur.close()
+            conn.close()
+            return jsonify({"status": "error", "message": "This link is invalid or has expired."}), 400
+
+        email = row[0]
+
+        # Update the user's password
+        cur.execute(
+            "UPDATE users SET password_hash = %s WHERE email = %s",
+            (new_password, email)
+        )
+
+        # Delete the used token so it can't be reused
+        cur.execute("DELETE FROM password_resets WHERE token = %s", (token,))
+
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        return jsonify({"status": "success", "message": "Password updated successfully."}), 200
+
+    except Exception as e:
+        print("RESET PASSWORD ERROR:", e)
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 
 @app.route('/api/test-send-money', methods=['GET'])
 def test_send_money():
