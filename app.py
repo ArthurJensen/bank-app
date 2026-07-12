@@ -359,7 +359,7 @@ def forgot_password():
 
         # Send the email via Resend
         resend.Emails.send({
-            "from": "noreply@meridiantrust.com",
+            "from": "onboarding@resend.dev",
             "to": email,
             "subject": "Reset your Meridian Trust password",
             "html": f"""
