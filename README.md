@@ -44,9 +44,9 @@ This project simulates a functional online banking portal where users can regist
 
 ```text
 ├── index.html               # Landing page highlighting features and bank info
-├── Login.html               # User authentication interface
-├── CheckingCreation.html    # Registration page with form validation
-├── Dashboard.html           # Dynamic dashboard rendering secure user data
+├── login.html               # User authentication interface
+├── open-checking.html    # Registration page with form validation
+├── dashboard.html           # Dynamic dashboard rendering secure user data
 ├── css/                     # Folder containing component and global styling
 ├── app.py                   # Main Flask backend application and API routes
 ├── requirements.txt         # Python dependencies for Render deployment

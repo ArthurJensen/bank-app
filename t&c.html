@@ -5,7 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/x-icon" href="favicon.ico">
-<link rel="stylesheet" href="css/accountagreement.css">
+<link rel="stylesheet" href="css/t&c.css">
+<script src="js/t&c.js"></script>
+
 <title>Account Agreement — Meridian Trust</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,450;0,9..144,600;1,9..144,450&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -200,23 +202,6 @@
 <footer class="site-footer">
   <p>© 2026 Meridian Trust · Member FDIC · Routing 071925511</p>
 </footer>
-
-<script>
-  const sections = document.querySelectorAll('.policy-section');
-  const tocLinks = document.querySelectorAll('.toc-link');
-
-  const observer = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      if (entry.isIntersecting) {
-        tocLinks.forEach(a => a.classList.remove('active'));
-        const match = document.querySelector('.toc-link[href="#' + entry.target.id + '"]');
-        if (match) match.classList.add('active');
-      }
-    });
-  }, { rootMargin: '-10% 0px -75% 0px' });
-
-  sections.forEach(s => observer.observe(s));
-</script>
 
 </body>
 </html>

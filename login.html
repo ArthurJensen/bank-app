@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="css/global.css">
 <link rel="stylesheet" href="css/components.css">
+<script src="js/login.js"></script>
 <link rel="stylesheet" href="css/login.css">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,450;0,9..144,600;1,9..144,450&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 </head>
@@ -60,7 +61,7 @@
 
     <div class="divider">or</div>
 
-    <p class="signup-line">New to Meridian Trust? <a href="CheckingCreation.html">Open an account</a></p>
+    <p class="signup-line">New to Meridian Trust? <a href="open-checking.html">Open an account</a></p>
 
     <div class="security-note">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 6V11C4 16 7.5 20.5 12 22C16.5 20.5 20 16 20 11V6L12 2Z" stroke="#C9A56E" stroke-width="1.3"/></svg>
@@ -70,86 +71,6 @@
 </main>
 
 <footer>© 2026 Meridian Trust · Member FDIC · Routing 071925511</footer>
-
-<script>
-  //Gets the information that the user has stored in the html with id "____"
- const form = document.getElementById('loginForm');
-  const userField = document.getElementById('userField');
-  const pwField = document.getElementById('pwField');
-  const username = document.getElementById('username');
-  const password = document.getElementById('password');
-  const submitBtn = document.getElementById('submitBtn');
- 
-
-   //When user clicks on the button with the id of submit let the variable valid = true.
-  form.addEventListener('submit', function(e){
-    e.preventDefault();
-    let valid = true;
-
-    //If username contains only spaces or empty characters state that it is an error, and if there are make valid ≠ true
-    if(!username.value.trim()){
-      userField.classList.add('field-error');
-      valid = false;
-    } else {
-      userField.classList.remove('field-error');
-    }
-
-    //Do the same with the password
-    if(!password.value){
-      pwField.classList.add('field-error');
-      valid = false;
-    } else {
-      pwField.classList.remove('field-error');
-    }
-
-    //Prevents a person from clicking submit multiple times ?
-    if(valid){
-      submitBtn.textContent = 'Signing in…';
-      submitBtn.disabled = true;
-
-      // Send the data to your LIVE Render backend
-      fetch('https://bank-app-owi0.onrender.com/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: username.value.trim(), password: password.value })
-      })
-
-      // Convert the server response into usable data
-      .then(response => response.json())
-
-// Process the response and reset the login button
-      .then(data => {
-        submitBtn.textContent = 'Log in';
-        submitBtn.disabled = false;
-        
-        // Check the response from Python
-        if(data.status === 'success') {
-            // Save the user ID to local storage so the dashboard knows who logged in
-            localStorage.setItem('bank_user_id', data.user_id);
-            // Redirect to the dashboard
-            window.location.href = 'Dashboard.html';
-        } else {
-            alert("Login failed: " + data.message);
-        }
-      })
-      
-      //If it manages to catch an error while signing in, then state that there is an error.
-      .catch(error => {
-        submitBtn.textContent = 'Log in';
-        submitBtn.disabled = false;
-        alert("Error connecting to the server. Is app.py running?");
-        console.error('Error:', error);
-      });
-    }
-  });
-
-  // Remove the error highlight when the user starts typing
-  [username, password].forEach(function(input){
-    input.addEventListener('input', function(){
-      input.closest('.field').classList.remove('field-error');
-    });
-  });
-</script>
 
 </body>
 </html>
